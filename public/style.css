@@ -1,0 +1,144 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    color: #333;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.login-box {
+    background: white;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    max-width: 400px;
+    margin: 50px auto;
+    text-align: center;
+}
+
+.login-box h1 {
+    color: #4a5568;
+    margin-bottom: 10px;
+}
+
+.tabs {
+    display: flex;
+    margin: 20px 0;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.tab-button {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.tab-button.active {
+    border-bottom: 3px solid #667eea;
+    color: #667eea;
+    font-weight: bold;
+}
+
+.form {
+    display: none;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.form.active {
+    display: flex;
+}
+
+input, select, button {
+    padding: 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 16px;
+}
+
+button {
+    background: #667eea;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+button:hover {
+    background: #5a6fd8;
+}
+
+#mapSection header {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.filters {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    margin: 20px 0;
+    display: flex;
+    gap: 20px;
+}
+
+#map {
+    height: 400px;
+    margin: 20px 0;
+    border-radius: 10px;
+}
+
+.route-card {
+    background: white;
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.route-type {
+    padding: 3px 8px;
+    border-radius: 4px;
+    color: white;
+    font-size: 12px;
+    margin-left: 10px;
+}
+
+.taxi { background: #4299e1; }
+.bus { background: #48bb78; }
+.train { background: #ed8936; }
+
+.message {
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    display: none;
+}
+
+.message.success { background: #c6f6d5; color: #2d3748; }
+.message.error { background: #fed7d7; color: #c53030; }

@@ -1,0 +1,50 @@
+[
+  {
+    "id": 1,
+    "type": "taxi",
+    "name": "Faraday Taxi Rank",
+    "from": "Faraday",
+    "to": "Johannesburg CBD",
+    "fee": 25,
+    "time": 30,
+    "schedule": "5:00 AM - 10:00 PM",
+    "lat": -26.2041,
+    "lng": 28.0473
+  },
+  {
+    "id": 2,
+    "type": "taxi",
+    "name": "Bree Taxi Rank",
+    "from": "Bree Street",
+    "to": "Soweto",
+    "fee": 35,
+    "time": 45,
+    "schedule": "4:30 AM - 11:00 PM",
+    "lat": -26.2044,
+    "lng": 28.0416
+  },
+  {
+    "id": 3,
+    "type": "bus",
+    "name": "Gandhi Square Bus Hub",
+    "from": "Gandhi Square",
+    "to": "Soweto",
+    "fee": 15,
+    "time": 50,
+    "schedule": "5:00 AM - 9:00 PM",
+    "lat": -26.2050,
+    "lng": 28.0400
+  },
+  {
+    "id": 4,
+    "type": "train",
+    "name": "Park Station",
+    "from": "Park Station",
+    "to": "Soweto",
+    "fee": 10,
+    "time": 35,
+    "schedule": "4:30 AM - 10:00 PM",
+    "lat": -26.1975,
+    "lng": 28.0344
+  }
+]

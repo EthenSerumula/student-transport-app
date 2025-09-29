@@ -1,0 +1,16 @@
+[
+  {
+    "id": 1,
+    "username": "User1",
+    "password": "$2a$10$rHYRA9s2B.SATrWSxmvjEerA48B8mryJx2lmLttbgO8ZwwdMaRm8.",
+    "language": "en",
+    "createdAt": "2025-09-29T09:06:22.158Z"
+  },
+  {
+    "id": 2,
+    "username": "User2",
+    "password": "$2a$10$NX4Pas6WM0hzYAfINOQyaOIqP1LyOYXOF7cJIaV3DuY3wYD2wBCka",
+    "language": "en",
+    "createdAt": "2025-09-29T09:06:45.013Z"
+  }
+]
