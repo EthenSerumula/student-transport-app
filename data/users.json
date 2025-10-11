@@ -12,5 +12,12 @@
     "password": "$2a$10$NX4Pas6WM0hzYAfINOQyaOIqP1LyOYXOF7cJIaV3DuY3wYD2wBCka",
     "language": "en",
     "createdAt": "2025-09-29T09:06:45.013Z"
+  },
+  {
+    "id": 3,
+    "username": "Ethen",
+    "password": "$2a$10$dxlBcbHG0WRs1QQAoiWmDu7m2QWoryHYTZmesLgIlekr4lhVvZTO.",
+    "language": "en",
+    "createdAt": "2025-10-11T09:48:14.891Z"
   }
 ]

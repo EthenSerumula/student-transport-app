@@ -3,27 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Transport App</title>
+    <title>Richfield Student Transport Guide</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <!-- Login/Register Section -->
     <div id="authSection" class="container">
         <div class="login-box">
-            <h1>Richfield Student Transport  app</h1>
-            <p>Find transportation in Johannesburg South</p>
+            <h1>🚌 Richfield Student Transport Guide</h1>
+            <p>Your guide to transportation around Johannesburg</p>
             
             <div class="tabs">
                 <button class="tab-button active" onclick="showTab('login', event)">Login</button>
                 <button class="tab-button" onclick="showTab('register', event)">Register</button>
             </div>
             
+            <!-- Login Form -->
             <form id="loginForm" class="form active">
                 <input type="text" id="loginUsername" placeholder="Username" required>
                 <input type="password" id="loginPassword" placeholder="Password" required>
                 <button type="submit">Login</button>
             </form>
             
+            <!-- Registration Form -->
             <form id="registerForm" class="form">
                 <input type="text" id="regUsername" placeholder="Choose username" required>
                 <input type="password" id="regPassword" placeholder="Choose password" required>
@@ -39,25 +42,46 @@
         </div>
     </div>
 
+    <!-- Main Application Section -->
     <div id="mapSection" class="container" style="display: none;">
         <header>
-            <h1>🚍 Johannesburg Student Transport</h1>
-            <div class="user-info">
-                Welcome, <span id="username">User</span>! 
-                <button onclick="logout()">Logout</button>
+            <h1>🚍 Richfield Student Transport Guide</h1>
+            <div class="nav-links">
+                <a href="#" class="active" onclick="showPage('map')">Transport Map</a>
+                <a href="/about" onclick="showPage('about')">About & Developers</a>
+                <div class="user-info">
+                    Welcome, <span id="username">User</span>! 
+                    <button onclick="logout()" class="secondary">Logout</button>
+                </div>
             </div>
         </header>
         
-        <div class="filters">
-            <label><input type="checkbox" id="showTaxis" checked> Taxis</label>
-            <label><input type="checkbox" id="showBuses" checked> Buses</label>
-            <label><input type="checkbox" id="showTrains" checked> Trains</label>
+        <!-- Map Content -->
+        <div id="mapContent">
+            <div class="filters">
+                <label><input type="checkbox" id="showTaxis" checked> Taxis</label>
+                <label><input type="checkbox" id="showBuses" checked> Buses</label>
+                <label><input type="checkbox" id="showTrains" checked> Trains</label>
+                <label><input type="checkbox" id="showPopular" checked> Popular Routes</label>
+            </div>
+            
+            <div id="map"></div>
+            
+            <!-- Directions Panel -->
+            <div id="directionsPanel" class="directions-panel">
+                <h3>🚗 Directions to Selected Location</h3>
+                <div id="directionsSteps"></div>
+            </div>
+            
+            <h2>Available Transportation Options</h2>
+            <div id="routesList"></div>
         </div>
-        
-        <div id="map"></div>
-        
-        <h2>Available Transportation</h2>
-        <div id="routesList"></div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p><strong>Richfield Student Transport Guide</strong></p>
+        <p>Helping students navigate Johannesburg safely and efficiently</p>
     </div>
 
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>

@@ -1,12 +1,22 @@
+/* Reset and base styles */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+/* Blue, Red, White Color Scheme */
+:root {
+    --primary-blue: #0033A0;    /* Rich blue */
+    --secondary-red: #DA291C;   /* Rich red */
+    --accent-white: #FFFFFF;    /* Pure white */
+    --light-blue: #E6F0FF;      /* Light blue background */
+    --dark-blue: #002244;       /* Dark blue for headers */
+}
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, var(--light-blue) 0%, var(--accent-white) 100%);
     min-height: 100vh;
     color: #333;
 }
@@ -15,44 +25,98 @@ body {
     max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
+    min-height: 80vh;
 }
 
+/* Header styles */
+header {
+    background: var(--primary-blue);
+    color: var(--accent-white);
+    padding: 15px 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 15px rgba(0, 51, 160, 0.3);
+}
+
+header h1 {
+    color: var(--accent-white);
+    font-size: 1.8em;
+}
+
+/* Navigation styles */
+.nav-links {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.nav-links a {
+    color: var(--accent-white);
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.nav-links a:hover, .nav-links a.active {
+    background-color: var(--secondary-red);
+}
+
+/* Login box styles */
 .login-box {
-    background: white;
+    background: var(--accent-white);
     padding: 40px;
     border-radius: 15px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.2);
     max-width: 400px;
     margin: 50px auto;
     text-align: center;
+    border: 2px solid var(--primary-blue);
 }
 
 .login-box h1 {
-    color: #4a5568;
+    color: var(--primary-blue);
     margin-bottom: 10px;
+    font-size: 2em;
 }
 
+.login-box p {
+    color: var(--dark-blue);
+    margin-bottom: 20px;
+}
+
+/* Tab styles */
 .tabs {
     display: flex;
     margin: 20px 0;
-    border-bottom: 2px solid #e2e8f0;
+    border-bottom: 2px solid var(--primary-blue);
 }
 
 .tab-button {
     flex: 1;
-    padding: 10px;
+    padding: 12px;
     border: none;
     background: none;
     cursor: pointer;
     font-size: 16px;
+    color: var(--primary-blue);
+    transition: all 0.3s;
 }
 
 .tab-button.active {
-    border-bottom: 3px solid #667eea;
-    color: #667eea;
+    border-bottom: 3px solid var(--secondary-red);
+    color: var(--secondary-red);
     font-weight: bold;
 }
 
+.tab-button:hover {
+    background-color: var(--light-blue);
+}
+
+/* Form styles */
 .form {
     display: none;
     flex-direction: column;
@@ -65,80 +129,236 @@ body {
 
 input, select, button {
     padding: 12px;
-    border: 1px solid #e2e8f0;
+    border: 2px solid var(--primary-blue);
     border-radius: 8px;
     font-size: 16px;
+    transition: border-color 0.3s;
+}
+
+input:focus, select:focus {
+    outline: none;
+    border-color: var(--secondary-red);
 }
 
 button {
-    background: #667eea;
-    color: white;
+    background: var(--primary-blue);
+    color: var(--accent-white);
     border: none;
     cursor: pointer;
-    transition: background 0.3s;
+    font-weight: bold;
+    transition: background-color 0.3s;
 }
 
 button:hover {
-    background: #5a6fd8;
+    background: var(--secondary-red);
 }
 
-#mapSection header {
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    margin-bottom: 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+button.secondary {
+    background: var(--secondary-red);
 }
 
-.user-info {
-    display: flex;
-    align-items: center;
-    gap: 15px;
+button.secondary:hover {
+    background: var(--primary-blue);
 }
 
-.filters {
-    background: white;
-    padding: 15px;
-    border-radius: 10px;
-    margin: 20px 0;
-    display: flex;
-    gap: 20px;
-}
-
-#map {
-    height: 400px;
-    margin: 20px 0;
-    border-radius: 10px;
-}
-
-.route-card {
-    background: white;
-    padding: 15px;
-    margin: 10px 0;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
-
-.route-type {
-    padding: 3px 8px;
-    border-radius: 4px;
-    color: white;
-    font-size: 12px;
-    margin-left: 10px;
-}
-
-.taxi { background: #4299e1; }
-.bus { background: #48bb78; }
-.train { background: #ed8936; }
-
-.message {
-    padding: 10px;
-    margin: 10px 0;
-    border-radius: 5px;
+/* Map section styles */
+#mapSection {
     display: none;
 }
 
-.message.success { background: #c6f6d5; color: #2d3748; }
-.message.error { background: #fed7d7; color: #c53030; }
+#map {
+    height: 500px;
+    margin: 20px 0;
+    border-radius: 10px;
+    border: 3px solid var(--primary-blue);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Filter controls */
+.filters {
+    background: var(--accent-white);
+    padding: 20px;
+    border-radius: 10px;
+    margin: 20px 0;
+    display: flex;
+    gap: 25px;
+    border: 2px solid var(--light-blue);
+}
+
+.filters label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--dark-blue);
+    font-weight: 500;
+}
+
+.filters input[type="checkbox"] {
+    accent-color: var(--secondary-red);
+}
+
+/* Route cards */
+.route-card {
+    background: var(--accent-white);
+    padding: 20px;
+    margin: 15px 0;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    border-left: 5px solid var(--primary-blue);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.route-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.route-card.popular {
+    border-left: 5px solid var(--secondary-red);
+    background: linear-gradient(135deg, var(--accent-white) 0%, var(--light-blue) 100%);
+}
+
+.route-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.route-type {
+    padding: 4px 12px;
+    border-radius: 20px;
+    color: var(--accent-white);
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.taxi { background: var(--primary-blue); }
+.bus { background: #48bb78; }
+.train { background: #ed8936; }
+
+.popular-badge {
+    background: var(--secondary-red);
+    color: var(--accent-white);
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 10px;
+    margin-left: 10px;
+}
+
+/* Directions panel */
+.directions-panel {
+    background: var(--accent-white);
+    padding: 20px;
+    border-radius: 10px;
+    margin: 20px 0;
+    border: 2px solid var(--primary-blue);
+    display: none;
+}
+
+.directions-step {
+    padding: 10px;
+    margin: 5px 0;
+    border-left: 3px solid var(--secondary-red);
+    background: var(--light-blue);
+}
+
+/* Message styles */
+.message {
+    padding: 12px;
+    margin: 15px 0;
+    border-radius: 8px;
+    display: none;
+    font-weight: 500;
+}
+
+.message.success { 
+    background: #d4edda; 
+    color: #155724; 
+    border: 1px solid #c3e6cb;
+}
+
+.message.error { 
+    background: #f8d7da; 
+    color: #721c24; 
+    border: 1px solid #f5c6cb;
+}
+
+/* About page styles */
+.about-content {
+    background: var(--accent-white);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    margin: 20px 0;
+}
+
+.developers-section {
+    background: var(--light-blue);
+    padding: 25px;
+    border-radius: 10px;
+    margin: 25px 0;
+    border: 2px solid var(--primary-blue);
+}
+
+.developers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.developer-card {
+    background: var(--accent-white);
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+    border: 1px solid var(--primary-blue);
+    transition: transform 0.3s;
+}
+
+.developer-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0, 51, 160, 0.2);
+}
+
+/* Footer styles */
+.footer {
+    background: var(--primary-blue);
+    color: var(--accent-white);
+    text-align: center;
+    padding: 20px;
+    margin-top: 40px;
+    border-radius: 10px 10px 0 0;
+}
+
+.footer p {
+    margin: 5px 0;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+    
+    header {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+    
+    .nav-links {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .filters {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .developers-grid {
+        grid-template-columns: 1fr;
+    }
+}

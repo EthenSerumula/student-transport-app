@@ -1,7 +1,7 @@
 {
-  "name": "student-transport-app",
+  "name": "richfield-student-transport",
   "version": "1.0.0",
-  "description": "Simple transport app for Johannesburg students",
+  "description": "Transportation guide for Richfield students in Johannesburg",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
