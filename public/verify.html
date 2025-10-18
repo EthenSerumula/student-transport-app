@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Email - Richfield Transport Guide</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="richfield-logo-bg">
+    <div class="container">
+        <div class="login-box" style="max-width: 500px;">
+            <h1><span class="richfield-logo"></span> Verify Your Email</h1>
+            <p>Complete your registration by verifying your email address</p>
+            
+            <form id="verifyForm" class="form active">
+                <input type="email" id="verifyEmail" placeholder="Your email address" required>
+                <input type="text" id="verifyCode" placeholder="6-digit verification code" required>
+                <input type="text" id="verifyUsername" placeholder="Username" required>
+                <input type="password" id="verifyPassword" placeholder="Password" required>
+                <select id="verifyLanguage">
+                    <option value="en">English</option>
+                    <option value="zu">Zulu</option>
+                    <option value="st">Sotho</option>
+                </select>
+                <button type="submit">Complete Registration</button>
+            </form>
+
+            <div id="codeDisplay" class="code-display" style="display: none;">
+                Demo Code: <span id="demoCode"></span>
+            </div>
+            
+            <div id="message" class="message"></div>
+
+            <div style="text-align: center; margin-top: 20px;">
+                <a href="/" style="color: #0033A0; text-decoration: none;">
+                    ← Back to Login
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Get verification code from URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const email = urlParams.get('email');
+        const code = urlParams.get('code');
+
+        if (email) {
+            document.getElementById('verifyEmail').value = email;
+        }
+        if (code) {
+            document.getElementById('verifyCode').value = code;
+        }
+
+        // Handle verification form submission
+        document.getElementById('verifyForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('verifyEmail').value;
+            const code = document.getElementById('verifyCode').value;
+            const username = document.getElementById('verifyUsername').value;
+            const password = document.getElementById('verifyPassword').value;
+            const language = document.getElementById('verifyLanguage').value;
+
+            try {
+                const response = await fetch('/api/verify-register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, code, username, password, language })
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    showMessage(result.message, 'success');
+                    setTimeout(() => {
+                        window.location.href = '/';
+                    }, 2000);
+                } else {
+                    showMessage(result.message, 'error');
+                }
+            } catch (error) {
+                showMessage('Network error. Please try again.', 'error');
+            }
+        });
+
+        function showMessage(message, type) {
+            const messageEl = document.getElementById('message');
+            messageEl.textContent = message;
+            messageEl.className = 'message ' + type;
+            messageEl.style.display = 'block';
+        }
+
+        // Show demo code if present in URL
+        if (urlParams.get('demo')) {
+            document.getElementById('codeDisplay').style.display = 'block';
+            document.getElementById('demoCode').textContent = code || 'Check server console';
+        }
+    </script>
+</body>
+</html>

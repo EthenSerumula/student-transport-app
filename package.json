@@ -1,7 +1,7 @@
 {
-  "name": "richfield-student-transport",
-  "version": "1.0.0",
-  "description": "Transportation guide for Richfield students in Johannesburg",
+  "name": "richfield-student-transport-guide",
+  "version": "3.0.0",
+  "description": "Enhanced transportation guide with email authentication and persistent database",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
@@ -9,6 +9,7 @@
   "dependencies": {
     "express": "^4.18.2",
     "express-session": "^1.17.3",
-    "bcryptjs": "^2.4.3"
+    "bcryptjs": "^2.4.3",
+    "nodemailer": "^6.9.7"
   }
 }

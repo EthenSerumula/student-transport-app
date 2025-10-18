@@ -11,7 +11,7 @@
     <!-- Login/Register Section -->
     <div id="authSection" class="container">
         <div class="login-box">
-            <h1>🚌 Richfield Student Transport Guide</h1>
+            <h1><span class="richfield-logo"></span> Richfield Student Transport Guide</h1>
             <p>Your guide to transportation around Johannesburg</p>
             
             <div class="tabs">
@@ -24,18 +24,31 @@
                 <input type="text" id="loginUsername" placeholder="Username" required>
                 <input type="password" id="loginPassword" placeholder="Password" required>
                 <button type="submit">Login</button>
+                <div style="text-align: center; margin-top: 15px;">
+                    <a href="javascript:void(0)" onclick="showTab('forgot', event)" style="color: #0033A0; text-decoration: none;">
+                        Forgot Password?
+                    </a>
+                </div>
             </form>
             
             <!-- Registration Form -->
             <form id="registerForm" class="form">
                 <input type="text" id="regUsername" placeholder="Choose username" required>
+                <input type="email" id="regEmail" placeholder="Your email address" required>
                 <input type="password" id="regPassword" placeholder="Choose password" required>
                 <select id="language">
                     <option value="en">English</option>
                     <option value="zu">Zulu</option>
                     <option value="st">Sotho</option>
                 </select>
-                <button type="submit">Register</button>
+                <button type="submit">Send Verification Code</button>
+            </form>
+
+            <!-- Forgot Password Form -->
+            <form id="forgotForm" class="form">
+                <input type="email" id="forgotEmail" placeholder="Your email address" required>
+                <button type="submit">Send Reset Code</button>
+                <div id="forgotMessage" class="message" style="margin-top: 10px;"></div>
             </form>
             
             <div id="message" class="message"></div>
@@ -45,10 +58,11 @@
     <!-- Main Application Section -->
     <div id="mapSection" class="container" style="display: none;">
         <header>
-            <h1>🚍 Richfield Student Transport Guide</h1>
+            <h1><span class="richfield-logo"></span> Richfield Student Transport Guide</h1>
             <div class="nav-links">
                 <a href="#" class="active" onclick="showPage('map')">Transport Map</a>
                 <a href="/about" onclick="showPage('about')">About & Developers</a>
+                <a href="/account" onclick="showPage('account')">Account Settings</a>
                 <div class="user-info">
                     Welcome, <span id="username">User</span>! 
                     <button onclick="logout()" class="secondary">Logout</button>
@@ -69,7 +83,7 @@
             
             <!-- Directions Panel -->
             <div id="directionsPanel" class="directions-panel">
-                <h3>🚗 Directions to Selected Location</h3>
+                <h3>Route Directions</h3>
                 <div id="directionsSteps"></div>
             </div>
             
@@ -80,8 +94,8 @@
 
     <!-- Footer -->
     <div class="footer">
-        <p><strong>Richfield Student Transport Guide</strong></p>
-        <p>Helping students navigate Johannesburg safely and efficiently</p>
+        <p><strong>Richfield Student Transport Guide v3.0</strong></p>
+        <p>Enhanced with email authentication and persistent storage</p>
     </div>
 
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>

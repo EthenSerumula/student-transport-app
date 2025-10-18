@@ -3,20 +3,146 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About - Student Transport</title>
+    <title>About - Richfield Student Transport Guide</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
-    <nav>
-        <a href="/">Home</a>
-        <a href="/about.html">About</a>
-        <a href="/developers.html">Developers</a>
-    </nav>
-    
+<body class="richfield-logo-bg">
     <div class="container">
-        <h1>About Student Transport App</h1>
-        <p>This application helps manage student transportation for Richfield College.</p>
-        <p>Features include route planning, student management, and transportation tracking.</p>
+        <header class="nav-enhanced">
+            <h1><span class="richfield-logo"></span> Richfield Student Transport Guide</h1>
+            <div class="nav-links">
+                <a href="/" onclick="showPage('map')">Transport Map</a>
+                <a href="#" class="active">About & Developers</a>
+                <a href="/account" onclick="showPage('account')">Account Settings</a>
+                <div class="user-info">
+                    Welcome, <span id="username">User</span>! 
+                    <button onclick="logout()" class="secondary">Logout</button>
+                </div>
+            </div>
+        </header>
+
+        <div class="about-hero">
+            <h2>About This Project</h2>
+            <p>Richfield Student Transport Guide - Making student commuting safer and smarter</p>
+        </div>
+
+        <div class="about-content">
+            <h3> Our Mission</h3>
+            <p>The Richfield Student Transport Guide is designed to help students navigate transportation options in and around Johannesburg. Our mission is to make commuting safer, easier, and more efficient for students.</p>
+            
+            <h3> Features</h3>
+            <ul style="margin: 15px 0 15px 30px;">
+                <li>Interactive map with transportation routes</li>
+                <li>Real-time route directions with visual paths</li>
+                <li>Multi-language support (English, Zulu, Sotho)</li>
+                <li>Secure user authentication system</li>
+                <li>Password reset with email support</li>
+                <li>Account management and deletion</li>
+                <li>Popular route recommendations</li>
+                <li>Professional Richfield university branding</li>
+            </ul>
+
+            <div class="developers-section">
+                <h3> Development Team</h3>
+                <p>This project was developed by Richfield students:</p>
+                <div class="developers-grid">
+                    <div class="developer-card-enhanced">
+                        <strong>Ethen Serumula</strong>
+                        <p>Project Lead & Full Stack Developer</p>
+                    </div>
+                    <div class="developer-card-enhanced">
+                        <strong>Bothlale Koee</strong>
+                        <p>Backend Developer & Database Architect</p>
+                    </div>
+                    <div class="developer-card-enhanced">
+                        <strong>Jouhannesburg Gonsalves Ngubani</strong>
+                        <p>Frontend Developer & UI Specialist</p>
+                    </div>
+                    <div class="developer-card-enhanced">
+                        <strong>Lehlogonolo Thekiso</strong>
+                        <p>UI/UX Designer & Branding Specialist</p>
+                    </div>
+                    <div class="developer-card-enhanced">
+                        <strong>Mxolisi Kgumeleni</strong>
+                        <p>Security Analyst & Testing Lead</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3> Technology Stack</h3>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon"></div>
+                    <h4>Frontend</h4>
+                    <p>HTML5, CSS3, JavaScript, Leaflet.js</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"></div>
+                    <h4>Backend</h4>
+                    <p>Node.js, Express.js, Session Management</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"></div>
+                    <h4>Security</h4>
+                    <p>bcryptjs, Email Authentication</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎓</div>
+                    <h4>Design</h4>
+                    <p>Richfield Blue/Red/White Theme</p>
+                </div>
+            </div>
+
+            <h3> Support</h3>
+            <p>For technical support or feature suggestions, please contact the development team through Richfield's computer science department.</p>
+        </div>
     </div>
+
+    <div class="footer">
+        <p><strong>Richfield Student Transport Guide v2.0</strong></p>
+        <p>Developed with  for Richfield Students</p>
+    </div>
+
+    <script>
+        // Check if user is logged in
+        async function checkAuth() {
+            try {
+                const response = await fetch('/api/user');
+                const data = await response.json();
+                if (!data.loggedIn) {
+                    window.location.href = '/';
+                } else {
+                    document.getElementById('username').textContent = data.user.username;
+                }
+            } catch (error) {
+                window.location.href = '/';
+            }
+        }
+
+        // Navigation function
+        function showPage(page) {
+            if (page === 'map') {
+                window.location.href = '/';
+            } else if (page === 'account') {
+                window.location.href = '/account';
+            }
+        }
+
+        // Logout function
+        async function logout() {
+            try {
+                const response = await fetch('/logout', { method: 'POST' });
+                const result = await response.json();
+                if (result.success) {
+                    window.location.href = '/';
+                }
+            } catch (error) {
+                console.error('Error logging out:', error);
+            }
+        }
+
+        // Check authentication on page load
+        document.addEventListener('DOMContentLoaded', checkAuth);
+    </script>
 </body>
 </html>

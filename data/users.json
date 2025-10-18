@@ -1,23 +1,29 @@
 [
   {
     "id": 1,
-    "username": "User1",
-    "password": "$2a$10$rHYRA9s2B.SATrWSxmvjEerA48B8mryJx2lmLttbgO8ZwwdMaRm8.",
+    "username": "Ethen101",
+    "email": "ethenserumula@gmail.com",
+    "password": "$2a$10$FRNIE31DIYpaLGmwnhYiNucWe44DjKUS33r57bUrAM8L2V46G5c82",
     "language": "en",
-    "createdAt": "2025-09-29T09:06:22.158Z"
+    "verified": true,
+    "createdAt": "2025-10-18T09:02:09.875Z"
   },
   {
     "id": 2,
-    "username": "User2",
-    "password": "$2a$10$NX4Pas6WM0hzYAfINOQyaOIqP1LyOYXOF7cJIaV3DuY3wYD2wBCka",
+    "username": "Jozee",
+    "email": "jgngubane23@gmail.com",
+    "password": "$2a$10$u4kKwwi9txBV/az.9ywY1eSGZg6QPVTs2UfIuqp.wEMNIOlqFU4xu",
     "language": "en",
-    "createdAt": "2025-09-29T09:06:45.013Z"
+    "verified": true,
+    "createdAt": "2025-10-18T09:32:46.084Z"
   },
   {
     "id": 3,
-    "username": "Ethen",
-    "password": "$2a$10$dxlBcbHG0WRs1QQAoiWmDu7m2QWoryHYTZmesLgIlekr4lhVvZTO.",
-    "language": "en",
-    "createdAt": "2025-10-11T09:48:14.891Z"
+    "username": "Homie",
+    "email": "koeebotlhale1107@gmail.com",
+    "password": "$2a$10$7bBCmPhi46/4sYrNShDJM.WbqD11e/wjMvbOP0L1zWq1SRIR6WOq.",
+    "language": "zu",
+    "verified": true,
+    "createdAt": "2025-10-18T09:34:55.522Z"
   }
 ]

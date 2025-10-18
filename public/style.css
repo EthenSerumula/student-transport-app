@@ -7,11 +7,11 @@
 
 /* Blue, Red, White Color Scheme */
 :root {
-    --primary-blue: #0033A0;    /* Rich blue */
-    --secondary-red: #DA291C;   /* Rich red */
-    --accent-white: #FFFFFF;    /* Pure white */
-    --light-blue: #E6F0FF;      /* Light blue background */
-    --dark-blue: #002244;       /* Dark blue for headers */
+    --primary-blue: #0033A0;
+    --secondary-red: #DA291C;
+    --accent-white: #FFFFFF;
+    --light-blue: #E6F0FF;
+    --dark-blue: #002244;
 }
 
 body {
@@ -26,6 +26,26 @@ body {
     margin: 0 auto;
     padding: 20px;
     min-height: 80vh;
+}
+
+/* Richfield Logo Background for About and Account Pages */
+.richfield-bg {
+    background: 
+        linear-gradient(135deg, var(--light-blue) 0%, var(--accent-white) 100%),
+        url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQwAAACUCAMAAABREOc7AAAAsVBMVEUGN3r///8TMnijsMbeRzz7/f0AG270+PkAG3D4+vwAIXKYobyRm7eWnbmyvdAAInG3w9QAJXJtPWgAEm4AL3YAM3gAKHgANn4AK3QAK3kAAGcANYDrSDXhRzpzPWafrcY7UYjAytgkQ4EjOH7V2uTl6e9ug6qGkK9idqCkqcGVQV09OXFdPGy/REkqOXWiQlPGRULXSEGsQ1BQO2uJQF2XQlO1REuDPmAsTYlFXZFMZpeWGk18AAADCklEQVR4nO3ab3eaMBQG8KAoiB1qSQbVIGChuNnav1vF7//BlgRwejbrO916n9+bSj2eQ55zbwgQxgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/kmic5K49DmeS7TsnpIso0uf5Zm436xTekP30md5Jv3h4FQYzhWpMHofIBdG/uWonFwY/tQ7YjqmF8bk2NcjhGGE7PsKYdRm9w8x9TDCWf1n/WjHT7e0wwjDezlTy+/5c2zLF8phhCxcPUg5C18fZGzb8o30BLp+i1VB3P6Q0lbkNeEw1vMnaT/b9pOJwrbjV7ph3L+osjAhNFk8r6iGEa5fZJNCI/65phvGo7TjPbZ8XIdUw2Dv8qAwbPnOBNEwGFvNrw/M1ZRBNgzuBgdczsiGwdNk7O8ZJ6kgG4ZIs8OnfRnlMBb+YRj+gm4YjEU3yldDfYj0lEE3DCZEKG6NDlef9b/ohqEnDj9T/E37Eo1WGO5hGKzQ00Uh2jA8UmH0r1QY2e7hjpvrMPLd6D11iXFK7zLndnajUtVCvhtt4Pcsq9cN2mNPhVOURx+efzKTpQrDGbWHplAGu1IQkaPCIPPiOap0Y7QTppgsVRjO8qb5lqe6aVJ+sdM7LyH0wnM3RfKFKgWHtfNnMNRLUSqFoRojUbVQTNvDoNg/muoeGvYvc2YXEG311XTZDniqCiVrw3CX+jq7pVMZLNB9UrhNZwRdy0qaphGu3ruRBcd/++lMTGmMm2qY3FnWXXMpnZqYKkKFocbcNXuVPFMbYpMki/pTP9FrjmT68a8/G7PsHAw7pgSEW3dM1DEbnHJiWbBooxtl4Kd8t6DgPNVrUavYkGoSzavM/VlebiZ67CKK0tLcpBQplduSPd7WjH2QlVvR74ttmZk9gHlFMAt1Edn4jokj98vSz3tmy6NPr0dqnNWNoTJw6q2wecmo3JP8QUTVVf77cXBeVhGZPeN/wUVVNq8LsjIVZMuiwcVC5ZGV1YJ8FJrgvNOJOOUGAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAID/yC+0v0WUlvtJyAAAAABJRU5ErkJggg==');
+    background-repeat: repeat;
+    background-size: 300px 300px;
+    background-blend-mode: overlay;
+}
+
+/* Richfield Logo Background for About and Account Pages */
+.richfield-logo-bg {
+    background: 
+        linear-gradient(135deg, var(--light-blue) 0%, var(--accent-white) 100%),
+        url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQwAAACUCAMAAABREOc7AAAAsVBMVEUGN3r///8TMnijsMbeRzz7/f0AG270+PkAG3D4+vwAIXKYobyRm7eWnbmyvdAAInG3w9QAJXJtPWgAEm4AL3YAM3gAKHgANn4AK3QAK3kAAGcANYDrSDXhRzpzPWafrcY7UYjAytgkQ4EjOH7V2uTl6e9ug6qGkK9idqCkqcGVQV09OXFdPGy/REkqOXWiQlPGRULXSEGsQ1BQO2uJQF2XQlO1REuDPmAsTYlFXZFMZpeWGk18AAADCklEQVR4nO3ab3eaMBQG8KAoiB1qSQbVIGChuNnav1vF7//BlgRwejbrO916n9+bSj2eQ55zbwgQxgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/kmic5K49DmeS7TsnpIso0uf5Zm436xTekP30md5Jv3h4FQYzhWpMHofIBdG/uWonFwY/tQ7YjqmF8bk2NcjhGGE7PsKYdRm9w8x9TDCWf1n/WjHT7e0wwjDezlTy+/5c2zLF8phhCxcPUg5C18fZGzb8o30BLp+i1VB3P6Q0lbkNeEw1vMnaT/b9pOJwrbjV7ph3L+osjAhNFk8r6iGEa5fZJNCI/65phvGo7TjPbZ8XIdUw2Dv8qAwbPnOBNEwGFvNrw/M1ZRBNgzuBgdczsiGwdNk7O8ZJ6kgG4ZIs8OnfRnlMBb+YRj+gm4YjEU3yldDfYj0lEE3DCZEKG6NDlef9b/ohqEnDj9T/E37Eo1WGO5hGKzQ00Uh2jA8UmH0r1QY2e7hjpvrMPLd6D11iXFK7zLndnajUtVCvhtt4Pcsq9cN2mNPhVOURx+efzKTpQrDGbWHplAGu1IQkaPCIPPiOap0Y7QTppgsVRjO8qb5lqe6aVJ+sdM7LyH0wnM3RfKFKgWHtfNnMNRLUSqFoRojUbVQTNvDoNg/muoeGvYvc2YXEG311XTZDniqCiVrw3CX+jq7pVMZLNB9UrhNZwRdy0qaphGu3ruRBcd/++lMTGmMm2qY3FnWXXMpnZqYKkKFocbcNXuVPFMbYpMki/pTP9FrjmT68a8/G7PsHAw7pgSEW3dM1DEbnHJiWbBooxtl4Kd8t6DgPNVrUavYkGoSzavM/VlebiZ67CKK0tLcpBQplduSPd7WjH2QlVvR74ttmZk9gHlFMAt1Edn4jokj98vSz3tmy6NPr0dqnNWNoTJw6q2wecmo3JP8QUTVVf77cXBeVhGZPeN/wUVVNq8LsjIVZMuiwcVC5ZGV1YJ8FJrgvNOJOOUGAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAID/yC+0v0WUlvtJyAAAAABJRU5ErkJggg==');
+    background-repeat: repeat;
+    background-size: 300px 300px;
+    background-blend-mode: overlay;
 }
 
 /* Header styles */
@@ -44,6 +64,13 @@ header {
 header h1 {
     color: var(--accent-white);
     font-size: 1.8em;
+}
+
+.nav-enhanced {
+    background: linear-gradient(135deg, var(--primary-blue) 0%, var(--dark-blue) 100%);
+    padding: 15px 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
 }
 
 /* Navigation styles */
@@ -263,28 +290,131 @@ button.secondary:hover {
     background: var(--light-blue);
 }
 
-/* Message styles */
-.message {
-    padding: 12px;
+/* Enhanced About Page */
+.about-hero {
+    background: linear-gradient(135deg, #0033A0 0%, #002244 100%);
+    color: white;
+    padding: 60px 40px;
+    text-align: center;
+    border-radius: 15px;
+    margin-bottom: 30px;
+    position: relative;
+    overflow: hidden;
+}
+
+.about-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('data:image/png;base64,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');
+    background-repeat: repeat;
+    background-size: 100px 100px;
+    opacity: 0.3;
+}
+
+/* Account Management Styles */
+.account-section {
+    background: var(--accent-white);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    margin: 20px 0;
+    border: 2px solid var(--primary-blue);
+}
+
+.danger-zone {
+    background: #f8d7da;
+    border: 2px solid #dc3545;
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 20px;
+}
+
+.danger-zone h3 {
+    color: #dc3545;
+    margin-bottom: 15px;
+}
+
+/* Password Reset Styles */
+.reset-form {
+    background: var(--light-blue);
+    padding: 20px;
+    border-radius: 10px;
     margin: 15px 0;
+    border: 2px solid var(--primary-blue);
+}
+
+.code-display {
+    background: var(--dark-blue);
+    color: var(--accent-white);
+    padding: 15px;
     border-radius: 8px;
-    display: none;
-    font-weight: 500;
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    margin: 10px 0;
+    letter-spacing: 5px;
 }
 
-.message.success { 
-    background: #d4edda; 
-    color: #155724; 
-    border: 1px solid #c3e6cb;
+/* Enhanced Developer Cards */
+.developer-card-enhanced {
+    background: linear-gradient(135deg, var(--accent-white) 0%, var(--light-blue) 100%);
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+    border: 2px solid var(--primary-blue);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
 }
 
-.message.error { 
-    background: #f8d7da; 
-    color: #721c24; 
-    border: 1px solid #f5c6cb;
+.developer-card-enhanced::before {
+    content: '🎓';
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 20px;
+    opacity: 0.3;
 }
 
-/* About page styles */
+.developer-card-enhanced:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 51, 160, 0.3);
+    border-color: var(--secondary-red);
+}
+
+/* Feature Cards */
+.feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin: 30px 0;
+}
+
+.feature-card {
+    background: var(--accent-white);
+    padding: 25px;
+    border-radius: 12px;
+    text-align: center;
+    border: 2px solid var(--light-blue);
+    transition: all 0.3s ease;
+}
+
+.feature-card:hover {
+    border-color: var(--primary-blue);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+.feature-icon {
+    font-size: 40px;
+    margin-bottom: 15px;
+}
+
+/* About content */
 .about-content {
     background: var(--accent-white);
     padding: 30px;
@@ -308,18 +438,25 @@ button.secondary:hover {
     margin-top: 15px;
 }
 
-.developer-card {
-    background: var(--accent-white);
-    padding: 15px;
+/* Message styles */
+.message {
+    padding: 12px;
+    margin: 15px 0;
     border-radius: 8px;
-    text-align: center;
-    border: 1px solid var(--primary-blue);
-    transition: transform 0.3s;
+    display: none;
+    font-weight: 500;
 }
 
-.developer-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 4px 12px rgba(0, 51, 160, 0.2);
+.message.success { 
+    background: #d4edda; 
+    color: #155724; 
+    border: 1px solid #c3e6cb;
+}
+
+.message.error { 
+    background: #f8d7da; 
+    color: #721c24; 
+    border: 1px solid #f5c6cb;
 }
 
 /* Footer styles */
@@ -334,6 +471,19 @@ button.secondary:hover {
 
 .footer p {
     margin: 5px 0;
+}
+
+/* Custom Richfield Logo Icon */
+.richfield-logo {
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    background-image: url('data:image/png;base64,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');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    vertical-align: middle;
+    margin-right: 8px;
 }
 
 /* Responsive design */
@@ -360,5 +510,17 @@ button.secondary:hover {
     
     .developers-grid {
         grid-template-columns: 1fr;
+    }
+    
+    .about-hero {
+        padding: 40px 20px;
+    }
+    
+    .feature-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .developer-card-enhanced {
+        margin: 10px 0;
     }
 }

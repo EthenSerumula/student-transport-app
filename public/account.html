@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Management - Richfield Transport Guide</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="richfield-logo-bg">
+    <div class="container">
+        <header class="nav-enhanced">
+            <h1><span class="richfield-logo"></span> Richfield Student Transport Guide</h1>
+            <div class="nav-links">
+                <a href="/">Transport Map</a>
+                <a href="/about">About & Developers</a>
+                <a href="#" class="active">Account Settings</a>
+                <div class="user-info">
+                    Welcome, <span id="username">User</span>! 
+                    <button onclick="logout()" class="secondary">Logout</button>
+                </div>
+            </div>
+        </header>
+
+        <div class="about-hero">
+            <h2>Account Management</h2>
+            <p>Manage your account settings and security</p>
+        </div>
+
+        <!-- Password Reset Section -->
+        <div class="account-section">
+            <h3> Password Reset</h3>
+            <p>Forgot your password? Request a reset code.</p>
+            
+            <div class="reset-form">
+                <h4>Request Reset Code</h4>
+                <input type="text" id="resetUsername" placeholder="Your username" style="width: 100%; margin-bottom: 10px;">
+                <button onclick="requestReset()" class="secondary">Send Reset Code</button>
+                <div id="resetMessage" class="message" style="margin-top: 10px;"></div>
+            </div>
+
+            <div class="reset-form" id="resetCodeSection" style="display: none;">
+                <h4>Enter Reset Code</h4>
+                <div id="codeDisplay" class="code-display"></div>
+                <input type="text" id="resetCode" placeholder="Enter 6-digit code" style="width: 100%; margin: 10px 0;">
+                <input type="password" id="newPassword" placeholder="New password" style="width: 100%; margin-bottom: 10px;">
+                <button onclick="resetPassword()" class="secondary">Reset Password</button>
+            </div>
+        </div>
+
+        <!-- Account Deletion Section -->
+        <div class="account-section danger-zone">
+            <h3> Danger Zone</h3>
+            <p>Permanently delete your account and all associated data.</p>
+            <p><strong>Warning:</strong> This action cannot be undone!</p>
+            
+            <button onclick="confirmDelete()" style="background: #dc3545; margin-top: 15px;">
+                 Delete My Account
+            </button>
+        </div>
+
+        <!-- Features Showcase -->
+        <div class="account-section">
+            <h3> Enhanced Features</h3>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon"></div>
+                    <h4>Email Support</h4>
+                    <p>Password reset via email with secure authentication codes</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"></div>
+                    <h4>Account Security</h4>
+                    <p>Enhanced security with proper session management</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"></div>
+                    <h4>Account Management</h4>
+                    <p>Full control over your account data and preferences</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"></div>
+                    <h4>Richfield Branding</h4>
+                    <p>Professional university-themed design and branding</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p><strong>Richfield Student Transport Guide v2.0</strong></p>
+        <p>Enhanced with account management and security features</p>
+    </div>
+
+    <script>
+        // Check authentication
+        async function checkAuth() {
+            try {
+                const response = await fetch('/api/user');
+                const data = await response.json();
+                if (!data.loggedIn) {
+                    window.location.href = '/';
+                } else {
+                    document.getElementById('username').textContent = data.user.username;
+                    document.getElementById('resetUsername').value = data.user.username;
+                }
+            } catch (error) {
+                window.location.href = '/';
+            }
+        }
+
+        // Request password reset
+        async function requestReset() {
+            const username = document.getElementById('resetUsername').value;
+            
+            if (!username) {
+                showMessage('Please enter your username', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/forgot-password', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username })
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    showMessage(result.message, 'success');
+                    document.getElementById('resetCodeSection').style.display = 'block';
+                    document.getElementById('codeDisplay').textContent = result.demoCode;
+                } else {
+                    showMessage(result.message, 'error');
+                }
+            } catch (error) {
+                showMessage('Network error. Please try again.', 'error');
+            }
+        }
+
+        // Reset password with code
+        async function resetPassword() {
+            const username = document.getElementById('resetUsername').value;
+            const code = document.getElementById('resetCode').value;
+            const newPassword = document.getElementById('newPassword').value;
+
+            if (!code || !newPassword) {
+                showMessage('Please enter both code and new password', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/reset-password', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, code, newPassword })
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    showMessage(result.message, 'success');
+                    setTimeout(() => {
+                        window.location.href = '/';
+                    }, 2000);
+                } else {
+                    showMessage(result.message, 'error');
+                }
+            } catch (error) {
+                showMessage('Network error. Please try again.', 'error');
+            }
+        }
+
+        // Delete account confirmation
+        function confirmDelete() {
+            if (confirm('Are you sure you want to delete your account? This action cannot be undone!')) {
+                deleteAccount();
+            }
+        }
+
+        // Delete user account
+        async function deleteAccount() {
+            try {
+                const response = await fetch('/api/account', {
+                    method: 'DELETE'
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    alert('Account deleted successfully');
+                    window.location.href = '/';
+                } else {
+                    alert('Error: ' + result.message);
+                }
+            } catch (error) {
+                alert('Network error. Please try again.');
+            }
+        }
+
+        // Show message
+        function showMessage(message, type) {
+            const messageEl = document.getElementById('resetMessage');
+            messageEl.textContent = message;
+            messageEl.className = 'message ' + type;
+            messageEl.style.display = 'block';
+        }
+
+        // Logout function
+        async function logout() {
+            try {
+                const response = await fetch('/logout', { method: 'POST' });
+                const result = await response.json();
+                if (result.success) {
+                    window.location.href = '/';
+                }
+            } catch (error) {
+                console.error('Error logging out:', error);
+            }
+        }
+
+        // Check authentication on page load
+        document.addEventListener('DOMContentLoaded', checkAuth);
+    </script>
+</body>
+</html>
