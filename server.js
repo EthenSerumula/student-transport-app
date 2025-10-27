@@ -21,22 +21,22 @@ app.use(session({
     cookie: { maxAge: 24 * 60 * 60 * 1000 }
 }));
 
-// REAL Email configuration - Replace with your Gmail credentials
+// Email configuration - Replace with your actual Gmail credentials
 const emailTransporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: 'serumulaethan14@gmail.com', // ← REPLACE WITH YOUR GMAIL
-        pass: 'ljlfdjxmmgoktqkq'     // ← REPLACE WITH APP PASSWORD
+        user: 'serumulaethan14@gmail.com',
+        pass: 'ljlfdjxmmgoktqkq'
     }
 });
 
-// For testing without real email, uncomment this DEMO MODE section:
+// For demo mode (comment out the above and uncomment below):
 /*
 const emailTransporter = {
     sendMail: async function(mailOptions) {
         console.log(' DEMO MODE - Email would be sent to:', mailOptions.to);
         console.log('Subject:', mailOptions.subject);
-        console.log( 'Verification Code:', mailOptions.html.match(/\d{6}/)?.[0] || 'Not found');
+        console.log('Language:', mailOptions.language || 'en');
         return { messageId: 'demo-mode' };
     }
 };
@@ -45,6 +45,61 @@ const emailTransporter = {
 // Database file paths
 const USERS_FILE = path.join(__dirname, 'data', 'users.json');
 const ROUTES_FILE = path.join(__dirname, 'data', 'routes.json');
+
+// Load language translations
+const translations = {
+    en: {
+        verification_subject: 'Richfield Transport - Email Verification Code',
+        verification_title: 'Email Verification Required',
+        verification_message: 'Your verification code is:',
+        verification_instructions: 'This code will expire in 10 minutes. Enter this code on the verification page to complete your registration.',
+        reset_subject: 'Richfield Transport - Password Reset Code',
+        reset_title: 'Password Reset Request',
+        reset_message: 'Your password reset code is:',
+        reset_instructions: 'This code will expire in 15 minutes. Enter this code to reset your password.',
+        delete_subject: 'Richfield Transport - Account Deletion Verification',
+        delete_title: 'Account Deletion Request',
+        delete_warning: 'WARNING: This action cannot be undone!',
+        delete_message: 'Your account deletion verification code is:',
+        delete_instructions: 'This code will expire in 10 minutes. Enter this code to permanently delete your account.',
+        footer_note: 'If you didn\'t request this, please ignore this email.',
+        slogan: 'Richfield Student Transport Guide - You will never travel alone.'
+    },
+    zu: {
+        verification_subject: 'Richfield Transport - Ikhodi Yokuqinisekisa I-imeyili',
+        verification_title: 'Ukuqinisekiswa Kwe-imeyili Kuyadingeka',
+        verification_message: 'Ikhodi yakho yokuqinisekisa iyi:',
+        verification_instructions: 'Le khodi izophelelwa isikhathi emizuzwini eyi-10. Faka le khodi ekhasini lokuqinisekisa ukuze uqedze ukubhalisa kwakho.',
+        reset_subject: 'Richfield Transport - Ikhodi Yokusetha Kabusha Iphasiwedi',
+        reset_title: 'Isicelo Sokusetha Kabusha Iphasiwedi',
+        reset_message: 'Ikhodi yakho yokusetha kabusha iphasiwedi iyi:',
+        reset_instructions: 'Le khodi izophelelwa isikhathi emizuzwini eyi-15. Faka le khodi ukuze usethe kabusha iphasiwedi yakho.',
+        delete_subject: 'Richfield Transport - Ukuqinisekiswa Kokucisha I-akhawunti',
+        delete_title: 'Isicelo Sokucisha I-akhawunti',
+        delete_warning: 'ISEXWAYISO: Lesi senzo asikwazi ukuhlehliswa!',
+        delete_message: 'Ikhodi yakho yokuqinisekisa ukucisha i-akhawunti iyi:',
+        delete_instructions: 'Le khodi izophelelwa isikhathi emizuzwini eyi-10. Faka le khodi ukuze ucishe i-akhawunti yakho unomphela.',
+        footer_note: 'Uma ungazange ucele lokhu, nceble ungayinaki le imeyili.',
+        slogan: 'Umhlahlandlela Wezokuthutha Wabafundi Base-Richfield - Ngeke uhambe wedwa.'
+    },
+    st: {
+        verification_subject: 'Richfield Transport - Khoutu ya Tiiisetso ya Email',
+        verification_title: 'Tiiisetso ya Email e a Nyakega',
+        verification_message: 'Khoutu ya gago ya tiiisetso ke:',
+        verification_instructions: 'Khoutu e e tla felela ka morago ga metsotso e le 10. Kenya khoutu e letlobapeding la tiiisetso go fedisa ngwadisiso ya gago.',
+        reset_subject: 'Richfield Transport - Khoutu ya Go seta Patswote gape',
+        reset_title: 'Kopo ya Go seta Patswote gape',
+        reset_message: 'Khoutu ya gago ya go seta patswote gape ke:',
+        reset_instructions: 'Khoutu e e tla felela ka morago ga metsotso e le 15. Kenya khoutu e go seta patswote ya gago gape.',
+        delete_subject: 'Richfield Transport - Tiiisetso ya Go phimola Akhaonte',
+        delete_title: 'Kopo ya Go phimola Akhaonte',
+        delete_warning: 'TLHOKOMELISO: Ketso e ga e ka boe e retolosiwa!',
+        delete_message: 'Khoutu ya gago ya tiiisetso ya go phimola akhaonte ke:',
+        delete_instructions: 'Khoutu e e tla felela ka morago ga metsotso e le 10. Kenya khoutu e go phimola akhaonte ya gago ka botlalo.',
+        footer_note: 'Fa o sa kopang seno, akga o se ineele email e.',
+        slogan: 'Tataiso ya Dithuthi ya Baithuti ba Richfield - Ngeke o ise o le nosi.'
+    }
+};
 
 // Load data from JSON files
 function loadUsers() {
@@ -74,6 +129,10 @@ function loadRoutes() {
 // Save data to JSON files
 function saveUsers(users) {
     try {
+        const dataDir = path.dirname(USERS_FILE);
+        if (!fs.existsSync(dataDir)) {
+            fs.mkdirSync(dataDir, { recursive: true });
+        }
         fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2));
         return true;
     } catch (error) {
@@ -84,6 +143,10 @@ function saveUsers(users) {
 
 function saveRoutes(routes) {
     try {
+        const dataDir = path.dirname(ROUTES_FILE);
+        if (!fs.existsSync(dataDir)) {
+            fs.mkdirSync(dataDir, { recursive: true });
+        }
         fs.writeFileSync(ROUTES_FILE, JSON.stringify(routes, null, 2));
         return true;
     } catch (error) {
@@ -101,126 +164,31 @@ let passwordResetTokens = {};
 // Default routes data
 function getDefaultRoutes() {
     return [
-        // Taxi Routes
         {
-            "id": 1,
-            "type": "taxi",
-            "name": "Faraday Taxi Rank",
-            "from": "Richfield Campus",
-            "to": "Johannesburg CBD",
-            "fee": 25,
-            "time": 30,
-            "schedule": "5:00 AM - 10:00 PM",
-            "lat": -26.2041,
-            "lng": 28.0473,
-            "popular": true,
+            "id": 1, "type": "taxi", "name": "Faraday Taxi Rank", "from": "Richfield Campus", "to": "Johannesburg CBD",
+            "fee": 25, "time": 30, "schedule": "5:00 AM - 10:00 PM", "lat": -26.2041, "lng": 28.0473, "popular": true,
             "description": "Direct taxi service to Johannesburg CBD"
         },
         {
-            "id": 2,
-            "type": "taxi", 
-            "name": "Bree Taxi Rank",
-            "from": "Richfield Campus",
-            "to": "Soweto",
-            "fee": 35,
-            "time": 45,
-            "schedule": "4:30 AM - 11:00 PM",
-            "lat": -26.2044,
-            "lng": 28.0416,
-            "popular": true,
+            "id": 2, "type": "taxi", "name": "Bree Taxi Rank", "from": "Richfield Campus", "to": "Soweto",
+            "fee": 35, "time": 45, "schedule": "4:30 AM - 11:00 PM", "lat": -26.2044, "lng": 28.0416, "popular": true,
             "description": "Taxi service to Soweto area"
         },
-        
-        // Bus Routes from Park Station
         {
-            "id": 3,
-            "type": "bus",
-            "name": "Park Station Bus Hub",
-            "from": "Park Station",
-            "to": "Soweto",
-            "fee": 15,
-            "time": 50,
-            "schedule": "5:00 AM - 9:00 PM",
-            "lat": -26.1975,
-            "lng": 28.0344,
-            "popular": false,
+            "id": 3, "type": "bus", "name": "Park Station Bus Hub", "from": "Park Station", "to": "Soweto",
+            "fee": 15, "time": 50, "schedule": "5:00 AM - 9:00 PM", "lat": -26.1975, "lng": 28.0344, "popular": false,
             "description": "Bus service from Park Station to Soweto"
         },
         {
-            "id": 4,
-            "type": "bus",
-            "name": "Park Station to Pretoria",
-            "from": "Park Station",
-            "to": "Pretoria",
-            "fee": 40,
-            "time": 90,
-            "schedule": "5:30 AM - 8:00 PM",
-            "lat": -26.1975,
-            "lng": 28.0344,
-            "popular": true,
+            "id": 4, "type": "bus", "name": "Park Station to Pretoria", "from": "Park Station", "to": "Pretoria",
+            "fee": 40, "time": 90, "schedule": "5:30 AM - 8:00 PM", "lat": -26.1975, "lng": 28.0344, "popular": true,
             "description": "Express bus service to Pretoria"
         },
-        
-        // Train Routes from Park Station
         {
-            "id": 5,
-            "type": "train",
-            "name": "PRASA: Johannesburg to Pretoria",
-            "from": "Park Station",
-            "to": "Pretoria Station",
-            "fee": 25,
-            "time": 60,
-            "schedule": "5:00 AM - 8:00 PM",
-            "lat": -26.1975,
-            "lng": 28.0344,
-            "popular": true,
-            "description": "Commuter train via Marlboro, Midrand, Centurion. Highly recommended to travel during daylight for safety.",
-            "safety_note": "Travel during daylight hours. Be aware of surroundings. Check service status for punctuality."
-        },
-        {
-            "id": 6,
-            "type": "train",
-            "name": "PRASA: Johannesburg to Naledi (Soweto)",
-            "from": "Park Station",
-            "to": "Naledi Station",
-            "fee": 12,
-            "time": 45,
-            "schedule": "5:30 AM - 9:00 PM",
-            "lat": -26.1975,
-            "lng": 28.0344,
-            "popular": false,
-            "description": "Serves Soweto extension areas. Purchase tickets at station.",
-            "safety_note": "Services affected by infrastructure challenges. Check PRASA website for updates."
-        },
-        {
-            "id": 7,
-            "type": "train",
-            "name": "PRASA: Johannesburg to Leralla (East Rand)",
-            "from": "Park Station",
-            "to": "Leralla Station",
-            "fee": 18,
-            "time": 55,
-            "schedule": "5:15 AM - 8:30 PM",
-            "lat": -26.1975,
-            "lng": 28.0344,
-            "popular": false,
-            "description": "Serves East Rand via Germiston, Springs, Tembisa",
-            "safety_note": "Be cautious of cable theft affecting services. Travel in daylight recommended."
-        },
-        {
-            "id": 8,
-            "type": "train",
-            "name": "PRASA: Johannesburg to New Canada (Soweto)",
-            "from": "Park Station",
-            "to": "New Canada Station",
-            "fee": 12,
-            "time": 40,
-            "schedule": "5:45 AM - 9:15 PM",
-            "lat": -26.1975,
-            "lng": 28.0344,
-            "popular": false,
-            "description": "Alternative Soweto service route",
-            "safety_note": "Check current service status before travel"
+            "id": 5, "type": "train", "name": "PRASA: Johannesburg to Pretoria", "from": "Park Station", "to": "Pretoria Station",
+            "fee": 25, "time": 60, "schedule": "5:00 AM - 8:00 PM", "lat": -26.1975, "lng": 28.0344, "popular": true,
+            "description": "Commuter train via Marlboro, Midrand, Centurion",
+            "safety_note": "Travel during daylight hours. Be aware of surroundings."
         }
     ];
 }
@@ -230,43 +198,48 @@ function generateVerificationCode() {
     return Math.floor(100000 + Math.random() * 900000).toString();
 }
 
-// Send verification email
-async function sendVerificationEmail(email, code) {
+// Send verification email with language support
+async function sendVerificationEmail(email, code, language = 'en') {
     try {
+        const lang = translations[language] || translations.en;
+        
         const mailOptions = {
             from: 'richfield.transport@example.com',
             to: email,
-            subject: 'Richfield Transport - Email Verification Code',
+            subject: lang.verification_subject,
             html: `
                 <div style="font-family: Arial, sans-serif; background: linear-gradient(135deg, #0033A0, #DA291C); padding: 20px; color: white;">
-                    <h2 style="text-align: center;">🎓 Richfield Student Transport Guide</h2>
+                    <h2 style="text-align: center;"> Richfield Student Transport Guide</h2>
                     <div style="background: white; color: #333; padding: 25px; border-radius: 10px; margin-top: 15px;">
-                        <h3 style="color: #0033A0; text-align: center;">Email Verification Required</h3>
-                        <p style="font-size: 16px; text-align: center;">Your verification code is:</p>
+                        <h3 style="color: #0033A0; text-align: center;">${lang.verification_title}</h3>
+                        <p style="font-size: 16px; text-align: center;">${lang.verification_message}</p>
                         <div style="background: #0033A0; color: white; padding: 15px; border-radius: 8px; font-size: 32px; font-weight: bold; text-align: center; letter-spacing: 8px; margin: 20px 0;">
                             ${code}
                         </div>
                         <p style="font-size: 14px; text-align: center; color: #666;">
-                            This code will expire in 10 minutes.<br>
-                            Enter this code on the verification page to complete your registration.
+                            ${lang.verification_instructions}
                         </p>
                         <hr style="margin: 20px 0;">
+                        <div style="background: #f8f9fa; padding: 15px; border-radius: 5px; margin: 15px 0;">
+                            <h4 style="color: #0033A0; margin-bottom: 10px;">🚨 Emergency Contacts</h4>
+                            <p style="margin: 5px 0; font-size: 14px;"><strong>Transport Emergency Hotline:</strong> 0800 123 456</p>
+                            <p style="margin: 5px 0; font-size: 14px;"><strong>Richfield Newtown Campus:</strong> (011) 123 4567</p>
+                            <p style="margin: 5px 0; font-size: 14px;"><strong>Campus Security:</strong> (011) 765 4321</p>
+                        </div>
                         <p style="font-size: 12px; color: #999; text-align: center;">
-                            If you didn't request this verification, please ignore this email.<br>
-                            Richfield Student Transport Guide - Making student commuting safer and smarter.
+                            ${lang.footer_note}<br>
+                            ${lang.slogan}
                         </p>
                     </div>
                 </div>
-            `,
-            text: `Your Richfield Transport verification code is: ${code}. This code expires in 10 minutes.`
+            `
         };
         
         console.log(` SENDING VERIFICATION EMAIL TO: ${email}`);
-        console.log(` VERIFICATION CODE: ${code}`);
+        console.log(` LANGUAGE: ${language}`);
         
         const result = await emailTransporter.sendMail(mailOptions);
         console.log(` Email sent successfully to ${email}`);
-        console.log(` Message ID: ${result.messageId}`);
         return true;
         
     } catch (error) {
@@ -275,11 +248,114 @@ async function sendVerificationEmail(email, code) {
     }
 }
 
+// Send password reset email with language support
+async function sendPasswordResetEmail(email, code, language = 'en') {
+    try {
+        const lang = translations[language] || translations.en;
+        
+        const mailOptions = {
+            from: 'richfield.transport@example.com',
+            to: email,
+            subject: lang.reset_subject,
+            html: `
+                <div style="font-family: Arial, sans-serif; background: linear-gradient(135deg, #0033A0, #DA291C); padding: 20px; color: white;">
+                    <h2 style="text-align: center;"> Richfield Student Transport Guide</h2>
+                    <div style="background: white; color: #333; padding: 25px; border-radius: 10px; margin-top: 15px;">
+                        <h3 style="color: #0033A0; text-align: center;">${lang.reset_title}</h3>
+                        <p style="font-size: 16px; text-align: center;">${lang.reset_message}</p>
+                        <div style="background: #DA291C; color: white; padding: 15px; border-radius: 8px; font-size: 32px; font-weight: bold; text-align: center; letter-spacing: 8px; margin: 20px 0;">
+                            ${code}
+                        </div>
+                        <p style="font-size: 14px; text-align: center; color: #666;">
+                            ${lang.reset_instructions}
+                        </p>
+                        <hr style="margin: 20px 0;">
+                        <div style="background: #f8f9fa; padding: 15px; border-radius: 5px; margin: 15px 0;">
+                            <h4 style="color: #0033A0; margin-bottom: 10px;">🚨 Emergency Contacts</h4>
+                            <p style="margin: 5px 0; font-size: 14px;"><strong>Transport Emergency Hotline:</strong> 0800 123 456</p>
+                            <p style="margin: 5px 0; font-size: 14px;"><strong>Richfield Newtown Campus:</strong> (011) 123 4567</p>
+                            <p style="margin: 5px 0; font-size: 14px;"><strong>Campus Security:</strong> (011) 765 4321</p>
+                        </div>
+                        <p style="font-size: 12px; color: #999; text-align: center;">
+                            ${lang.footer_note}<br>
+                            ${lang.slogan}
+                        </p>
+                    </div>
+                </div>
+            `
+        };
+        
+        console.log(` SENDING PASSWORD RESET EMAIL TO: ${email}`);
+        console.log(` LANGUAGE: ${language}`);
+        
+        const result = await emailTransporter.sendMail(mailOptions);
+        console.log(` Password reset email sent successfully to ${email}`);
+        return true;
+        
+    } catch (error) {
+        console.error(' ERROR SENDING PASSWORD RESET EMAIL:', error);
+        return false;
+    }
+}
+
+// Send delete verification email with language support
+async function sendDeleteVerificationEmail(email, code, language = 'en') {
+    try {
+        const lang = translations[language] || translations.en;
+        
+        const mailOptions = {
+            from: 'richfield.transport@example.com',
+            to: email,
+            subject: lang.delete_subject,
+            html: `
+                <div style="font-family: Arial, sans-serif; background: linear-gradient(135deg, #0033A0, #DA291C); padding: 20px; color: white;">
+                    <h2 style="text-align: center;"> Richfield Student Transport Guide</h2>
+                    <div style="background: white; color: #333; padding: 25px; border-radius: 10px; margin-top: 15px;">
+                        <h3 style="color: #DA291C; text-align: center;">${lang.delete_title}</h3>
+                        <p style="font-size: 16px; text-align: center; color: #DA291C; font-weight: bold;">
+                            ${lang.delete_warning}
+                        </p>
+                        <p style="font-size: 16px; text-align: center;">${lang.delete_message}</p>
+                        <div style="background: #DA291C; color: white; padding: 15px; border-radius: 8px; font-size: 32px; font-weight: bold; text-align: center; letter-spacing: 8px; margin: 20px 0;">
+                            ${code}
+                        </div>
+                        <p style="font-size: 14px; text-align: center; color: #666;">
+                            ${lang.delete_instructions}
+                        </p>
+                        <hr style="margin: 20px 0;">
+                        <div style="background: #f8f9fa; padding: 15px; border-radius: 5px; margin: 15px 0;">
+                            <h4 style="color: #0033A0; margin-bottom: 10px;">🚨 Emergency Contacts</h4>
+                            <p style="margin: 5px 0; font-size: 14px;"><strong>Transport Emergency Hotline:</strong> 0800 123 456</p>
+                            <p style="margin: 5px 0; font-size: 14px;"><strong>Richfield Newtown Campus:</strong> (011) 123 4567</p>
+                            <p style="margin: 5px 0; font-size: 14px;"><strong>Campus Security:</strong> (011) 765 4321</p>
+                        </div>
+                        <p style="font-size: 12px; color: #999; text-align: center;">
+                            ${lang.footer_note}<br>
+                            ${lang.slogan}
+                        </p>
+                    </div>
+                </div>
+            `
+        };
+        
+        console.log(` SENDING DELETE VERIFICATION EMAIL TO: ${email}`);
+        console.log(` LANGUAGE: ${language}`);
+        
+        const result = await emailTransporter.sendMail(mailOptions);
+        console.log(` Delete verification email sent successfully to ${email}`);
+        return true;
+        
+    } catch (error) {
+        console.error(' ERROR SENDING DELETE VERIFICATION EMAIL:', error);
+        return false;
+    }
+}
+
 // ========== AUTHENTICATION ROUTES ==========
 
 // Send verification code
 app.post('/api/send-verification', async (req, res) => {
-    const { email } = req.body;
+    const { email, language = 'en' } = req.body;
     
     if (!email || !email.includes('@')) {
         return res.json({ success: false, message: 'Valid email address required' });
@@ -293,26 +369,25 @@ app.post('/api/send-verification', async (req, res) => {
     const verificationCode = generateVerificationCode();
     verificationCodes[email] = {
         code: verificationCode,
-        expires: Date.now() + 10 * 60 * 1000 // 10 minutes
+        expires: Date.now() + 10 * 60 * 1000,
+        language: language
     };
     
     console.log(`\n REGISTRATION ATTEMPT FOR: ${email}`);
-    console.log(` VERIFICATION CODE GENERATED: ${verificationCode}`);
+    console.log(` LANGUAGE PREFERENCE: ${language}`);
     
     // Send the actual email
-    const emailSent = await sendVerificationEmail(email, verificationCode);
+    const emailSent = await sendVerificationEmail(email, verificationCode, language);
     
     if (emailSent) {
         res.json({ 
             success: true, 
-            message: 'Verification code sent to your email!',
-            demoCode: verificationCode // Still return for testing
+            message: 'Verification code sent to your email! Check your inbox and spam folder.'
         });
     } else {
         res.json({ 
             success: false, 
-            message: 'Failed to send verification email. Please try again.',
-            demoCode: verificationCode
+            message: 'Failed to send verification email. Please try again.'
         });
     }
 });
@@ -412,78 +487,38 @@ app.post('/api/forgot-password', async (req, res) => {
     
     const user = users.find(u => u.email === email);
     if (!user) {
-        return res.json({ success: false, message: 'Email not found' });
+        // Don't reveal if email exists for security
+        return res.json({ 
+            success: true, 
+            message: 'If this email exists in our system, a password reset code has been sent.' 
+        });
     }
     
     const resetCode = generateVerificationCode();
     passwordResetTokens[email] = {
         code: resetCode,
-        expires: Date.now() + 15 * 60 * 1000
+        expires: Date.now() + 15 * 60 * 1000,
+        language: user.language || 'en'
     };
     
     console.log(`\n PASSWORD RESET REQUEST FOR: ${email}`);
-    console.log(` RESET CODE GENERATED: ${resetCode}`);
+    console.log(` USER LANGUAGE: ${user.language}`);
     
-    // Send reset email
-    const emailSent = await sendPasswordResetEmail(email, resetCode);
+    // Send reset email in user's preferred language
+    const emailSent = await sendPasswordResetEmail(email, resetCode, user.language);
     
     if (emailSent) {
         res.json({ 
             success: true, 
-            message: 'Password reset code sent to your email!',
-            demoCode: resetCode
+            message: 'If this email exists in our system, a password reset code has been sent to your email! Check your inbox and spam folder.'
         });
     } else {
         res.json({ 
             success: false, 
-            message: 'Failed to send reset email. Please try again.',
-            demoCode: resetCode
+            message: 'Failed to send reset email. Please try again.'
         });
     }
 });
-
-// Send password reset email
-async function sendPasswordResetEmail(email, code) {
-    try {
-        const mailOptions = {
-            from: 'richfield.transport@example.com',
-            to: email,
-            subject: 'Richfield Transport - Password Reset Code',
-            html: `
-                <div style="font-family: Arial, sans-serif; background: linear-gradient(135deg, #0033A0, #DA291C); padding: 20px; color: white;">
-                    <h2 style="text-align: center;">🎓 Richfield Student Transport Guide</h2>
-                    <div style="background: white; color: #333; padding: 25px; border-radius: 10px; margin-top: 15px;">
-                        <h3 style="color: #0033A0; text-align: center;">Password Reset Request</h3>
-                        <p style="font-size: 16px; text-align: center;">Your password reset code is:</p>
-                        <div style="background: #DA291C; color: white; padding: 15px; border-radius: 8px; font-size: 32px; font-weight: bold; text-align: center; letter-spacing: 8px; margin: 20px 0;">
-                            ${code}
-                        </div>
-                        <p style="font-size: 14px; text-align: center; color: #666;">
-                            This code will expire in 15 minutes.<br>
-                            Enter this code to reset your password.
-                        </p>
-                        <hr style="margin: 20px 0;">
-                        <p style="font-size: 12px; color: #999; text-align: center;">
-                            If you didn't request this reset, please ignore this email.<br>
-                            Richfield Student Transport Guide
-                        </p>
-                    </div>
-                </div>
-            `
-        };
-        
-        console.log(` SENDING PASSWORD RESET EMAIL TO: ${email}`);
-        console.log(` RESET CODE: ${code}`);
-        
-        const result = await emailTransporter.sendMail(mailOptions);
-        console.log(` Password reset email sent successfully to ${email}`);
-        return true;
-        
-    } catch (error) {
-        console.error(' ERROR SENDING PASSWORD RESET EMAIL:', error);
-        return false;
-    }
-}
 
 // Verify reset code and update password
 app.post('/api/reset-password', (req, res) => {
@@ -491,6 +526,10 @@ app.post('/api/reset-password', (req, res) => {
     
     if (!email || !code || !newPassword) {
         return res.json({ success: false, message: 'All fields are required' });
+    }
+    
+    if (newPassword.length < 6) {
+        return res.json({ success: false, message: 'Password must be at least 6 characters long' });
     }
     
     const tokenData = passwordResetTokens[email];
@@ -509,7 +548,8 @@ app.post('/api/reset-password', (req, res) => {
         delete passwordResetTokens[email];
         
         if (saveUsers(users)) {
-            res.json({ success: true, message: 'Password updated successfully' });
+            console.log(` PASSWORD UPDATED FOR: ${email}`);
+            res.json({ success: true, message: 'Password updated successfully! You can now login with your new password.' });
         } else {
             res.json({ success: false, message: 'Error saving password' });
         }
@@ -567,79 +607,33 @@ app.post('/api/send-delete-verification', async (req, res) => {
     }
     
     const userEmail = req.session.user.email;
+    const userLanguage = req.session.user.language || 'en';
     const deleteCode = generateVerificationCode();
     
     passwordResetTokens[userEmail] = {
         code: deleteCode,
-        expires: Date.now() + 10 * 60 * 1000
+        expires: Date.now() + 10 * 60 * 1000,
+        language: userLanguage
     };
     
     console.log(`\n ACCOUNT DELETE VERIFICATION FOR: ${userEmail}`);
-    console.log(` DELETE VERIFICATION CODE: ${deleteCode}`);
+    console.log(` USER LANGUAGE: ${userLanguage}`);
     
-    // Send delete verification email
-    const emailSent = await sendDeleteVerificationEmail(userEmail, deleteCode);
+    // Send delete verification email in user's preferred language
+    const emailSent = await sendDeleteVerificationEmail(userEmail, deleteCode, userLanguage);
     
     if (emailSent) {
         res.json({ 
             success: true, 
-            message: 'Verification code sent to your email!',
-            demoCode: deleteCode
+            message: 'Verification code sent to your email! Check your inbox and spam folder.'
         });
     } else {
         res.json({ 
             success: false, 
-            message: 'Failed to send verification email. Please try again.',
-            demoCode: deleteCode
+            message: 'Failed to send verification email. Please try again.'
         });
     }
 });
-
-// Send delete verification email
-async function sendDeleteVerificationEmail(email, code) {
-    try {
-        const mailOptions = {
-            from: 'richfield.transport@example.com',
-            to: email,
-            subject: 'Richfield Transport - Account Deletion Verification',
-            html: `
-                <div style="font-family: Arial, sans-serif; background: linear-gradient(135deg, #0033A0, #DA291C); padding: 20px; color: white;">
-                    <h2 style="text-align: center;">🎓 Richfield Student Transport Guide</h2>
-                    <div style="background: white; color: #333; padding: 25px; border-radius: 10px; margin-top: 15px;">
-                        <h3 style="color: #DA291C; text-align: center;">Account Deletion Request</h3>
-                        <p style="font-size: 16px; text-align: center; color: #DA291C; font-weight: bold;">
-                             WARNING: This action cannot be undone!
-                        </p>
-                        <p style="font-size: 16px; text-align: center;">Your account deletion verification code is:</p>
-                        <div style="background: #DA291C; color: white; padding: 15px; border-radius: 8px; font-size: 32px; font-weight: bold; text-align: center; letter-spacing: 8px; margin: 20px 0;">
-                            ${code}
-                        </div>
-                        <p style="font-size: 14px; text-align: center; color: #666;">
-                            This code will expire in 10 minutes.<br>
-                            Enter this code to permanently delete your account.
-                        </p>
-                        <hr style="margin: 20px 0;">
-                        <p style="font-size: 12px; color: #999; text-align: center;">
-                            If you didn't request account deletion, please secure your account immediately.<br>
-                            Richfield Student Transport Guide
-                        </p>
-                    </div>
-                </div>
-            `
-        };
-        
-        console.log(` SENDING DELETE VERIFICATION EMAIL TO: ${email}`);
-        console.log(` DELETE VERIFICATION CODE: ${code}`);
-        
-        const result = await emailTransporter.sendMail(mailOptions);
-        console.log(` Delete verification email sent successfully to ${email}`);
-        return true;
-        
-    } catch (error) {
-        console.error(' ERROR SENDING DELETE VERIFICATION EMAIL:', error);
-        return false;
-    }
-}
 
 // ========== API ROUTES ==========
 
@@ -743,11 +737,23 @@ if (routes.length === 0) {
     console.log('Initialized default routes data');
 }
 
+// Create data directory if it doesn't exist
+const dataDir = path.dirname(USERS_FILE);
+if (!fs.existsSync(dataDir)) {
+    fs.mkdirSync(dataDir, { recursive: true });
+}
+
 app.listen(PORT, () => {
-    console.log(`\nRichfield Enhanced Transport Guide v3.0`);
+    console.log(`\n Richfield Enhanced Transport Guide v3.0`);
     console.log(` Running on http://localhost:${PORT}`);
     console.log(` Email System: ${emailTransporter.createTransport ? 'ACTIVE' : 'DEMO MODE'}`);
     console.log(` Database: Persistent JSON storage`);
-    console.log(` Routes: Enhanced PRASA train system`);
+    console.log(`  Routes: Enhanced transportation system`);
+    console.log(` Languages: English, Zulu, Sotho`);
+    console.log(` Emergency Features: Integrated hotline support`);
+    console.log(`\n Emergency Contacts:`);
+    console.log(`   Transport Hotline: 0800 123 456`);
+    console.log(`   Richfield Campus: (011) 123 4567`);
+    console.log(`   Campus Security: (011) 765 4321`);
     console.log(`\nPress Ctrl+C to stop the server\n`);
 });

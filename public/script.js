@@ -224,7 +224,7 @@ function displayRoutes(routes) {
             <p><strong>Fee:</strong> R${route.fee} | <strong>Time:</strong> ${route.time} min</p>
             <p><strong>Schedule:</strong> ${route.schedule}</p>
             ${route.description ? `<p><strong>Description:</strong> ${route.description}</p>` : ''}
-            ${route.safety_note ? `<p style="color: #DA291C; font-weight: bold;">⚠️ ${route.safety_note}</p>` : ''}
+            ${route.safety_note ? `<p style="color: #DA291C; font-weight: bold;"> ${route.safety_note}</p>` : ''}
             <button onclick="showDirections(${route.id})" class="secondary" style="margin-top: 10px;">
                 View Directions
             </button>

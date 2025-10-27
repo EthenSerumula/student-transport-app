@@ -17,11 +17,19 @@
                 <input type="text" id="verifyCode" placeholder="6-digit verification code" required>
                 <input type="text" id="verifyUsername" placeholder="Username" required>
                 <input type="password" id="verifyPassword" placeholder="Password" required>
-                <select id="verifyLanguage">
-                    <option value="en">English</option>
-                    <option value="zu">Zulu</option>
-                    <option value="st">Sotho</option>
-                </select>
+                <div class="language-selection">
+                    <label for="verifyLanguage" style="display: block; margin-bottom: 8px; font-weight: bold; color: #0033A0;">
+                         Email Language Preference
+                    </label>
+                    <select id="verifyLanguage">
+                        <option value="en">English</option>
+                        <option value="zu">Zulu</option>
+                        <option value="st">Sotho</option>
+                    </select>
+                    <small style="display: block; margin-top: 5px; color: #666; font-size: 12px;">
+                        This only affects email communications. The app remains in English.
+                    </small>
+                </div>
                 <button type="submit">Complete Registration</button>
             </form>
 
@@ -44,12 +52,24 @@
         const urlParams = new URLSearchParams(window.location.search);
         const email = urlParams.get('email');
         const code = urlParams.get('code');
+        const username = urlParams.get('username');
+        const password = urlParams.get('password');
+        const language = urlParams.get('language');
 
         if (email) {
             document.getElementById('verifyEmail').value = email;
         }
         if (code) {
             document.getElementById('verifyCode').value = code;
+        }
+        if (username) {
+            document.getElementById('verifyUsername').value = username;
+        }
+        if (password) {
+            document.getElementById('verifyPassword').value = password;
+        }
+        if (language) {
+            document.getElementById('verifyLanguage').value = language;
         }
 
         // Handle verification form submission
