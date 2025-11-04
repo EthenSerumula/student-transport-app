@@ -69,6 +69,7 @@
                 <input type="email" id="resetEmail" readonly style="background: #f5f5f5;">
                 <input type="text" id="resetCode" placeholder="Enter 6-digit code" maxlength="6" required>
                 <input type="password" id="newPassword" placeholder="New password" required>
+                <input type="password" id="confirmPassword" placeholder="Confirm new password" required>
                 <button type="submit">Reset Password</button>
                 <div style="text-align: center; margin-top: 15px;">
                     <a href="javascript:void(0)" onclick="showTab('forgot', event)" style="color: #0033A0; text-decoration: none;">
@@ -98,11 +99,24 @@
         
         <!-- Map Content -->
         <div id="mapContent">
-            <div class="filters">
-                <label><input type="checkbox" id="showTaxis" checked> Taxis</label>
-                <label><input type="checkbox" id="showBuses" checked> Buses</label>
-                <label><input type="checkbox" id="showTrains" checked> Trains</label>
-                <label><input type="checkbox" id="showPopular" checked> Popular Routes</label>
+            <!-- Search and Filter Section -->
+            <div class="search-section">
+                <h3>Find Transportation</h3>
+                <div class="location-filters">
+                    <button class="location-filter active" data-location="all">All Locations</button>
+                    <button class="location-filter" data-location="soweto">Soweto</button>
+                    <button class="location-filter" data-location="west-rand">West Rand</button>
+                    <button class="location-filter" data-location="ekurhuleni">Ekurhuleni</button>
+                    <button class="location-filter" data-location="germiston">Germiston</button>
+                    <button class="location-filter" data-location="vaal">Vaal</button>
+                </div>
+                
+                <div class="transport-filters">
+                    <label><input type="checkbox" id="showTaxis" checked> Taxis</label>
+                    <label><input type="checkbox" id="showBuses" checked> Buses</label>
+                    <label><input type="checkbox" id="showTrains" checked> Trains</label>
+                    <label><input type="checkbox" id="showPopular" checked> Popular Routes</label>
+                </div>
             </div>
             
             <div id="map"></div>
@@ -169,10 +183,21 @@
                 button.classList.remove('active');
             });
             
-            document.getElementById(tabName + 'Form').classList.add('active');
-            document.getElementById(tabName + 'Form').style.display = 'flex';
+            if (tabName === 'forgot' || tabName === 'resetCode') {
+                // Special handling for password reset tabs
+                document.getElementById('forgotForm').style.display = 'flex';
+                document.getElementById('forgotForm').classList.add('active');
+                if (tabName === 'resetCode') {
+                    document.getElementById('forgotForm').style.display = 'none';
+                    document.getElementById('resetCodeForm').style.display = 'flex';
+                    document.getElementById('resetCodeForm').classList.add('active');
+                }
+            } else {
+                document.getElementById(tabName + 'Form').classList.add('active');
+                document.getElementById(tabName + 'Form').style.display = 'flex';
+            }
             
-            if (event) {
+            if (event && event.target) {
                 event.target.classList.add('active');
             }
             
@@ -253,7 +278,7 @@
             }
         });
 
-        // Forgot password function
+        // Forgot password function - FIXED VERSION
         document.getElementById('forgotForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
@@ -273,13 +298,12 @@
                     document.getElementById('forgotMessage').className = 'message success';
                     document.getElementById('forgotMessage').style.display = 'block';
                     
-                    // Show the code entry form if we should proceed
-                    if (result.showCodeInput) {
-                        document.getElementById('resetEmail').value = email;
-                        document.getElementById('forgotForm').style.display = 'none';
-                        document.getElementById('resetCodeForm').style.display = 'flex';
-                        document.getElementById('resetCodeForm').classList.add('active');
-                    }
+                    // Show the code entry form
+                    document.getElementById('resetEmail').value = email;
+                    document.getElementById('forgotForm').style.display = 'none';
+                    document.getElementById('resetCodeForm').style.display = 'flex';
+                    document.getElementById('resetCodeForm').classList.add('active');
+                    
                 } else {
                     document.getElementById('forgotMessage').textContent = result.message;
                     document.getElementById('forgotMessage').className = 'message error';
@@ -292,20 +316,33 @@
             }
         });
 
-        // Reset password with code
+        // Reset password with code - FIXED VERSION
         document.getElementById('resetCodeForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
             const email = document.getElementById('resetEmail').value;
             const code = document.getElementById('resetCode').value;
             const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
 
-            if (!code || !newPassword) {
-                showMessage('Please enter both code and new password', 'error');
+            if (!code || !newPassword || !confirmPassword) {
+                showMessage('Please enter all fields', 'error');
+                return;
+            }
+
+            if (newPassword !== confirmPassword) {
+                showMessage('Passwords do not match', 'error');
+                return;
+            }
+
+            if (newPassword.length < 6) {
+                showMessage('Password must be at least 6 characters long', 'error');
                 return;
             }
 
             try {
+                showMessage('Resetting password...', 'info');
+
                 const response = await fetch('/api/reset-password', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -315,13 +352,14 @@
                 const result = await response.json();
                 
                 if (result.success) {
-                    showMessage(result.message, 'success');
-                    // Return to login form after successful reset
+                    showMessage('Password reset successfully! You can now login with your new password.', 'success');
+                    // Clear form and return to login
                     setTimeout(() => {
+                        document.getElementById('resetCodeForm').reset();
                         showTab('login');
                         document.getElementById('resetCodeForm').style.display = 'none';
                         document.getElementById('forgotForm').style.display = 'flex';
-                    }, 2000);
+                    }, 3000);
                 } else {
                     showMessage(result.message, 'error');
                 }
@@ -351,10 +389,11 @@
             }
         }
 
-        // Enhanced map functionality with realistic routes
+        // Enhanced map functionality with location search
         let map;
         let markers = [];
         let routeLines = [];
+        let currentRoutes = [];
 
         function initMap() {
             map = L.map('map').setView([-26.2041, 28.0473], 11);
@@ -370,12 +409,14 @@
                 .openPopup();
             
             loadRoutes();
+            setupLocationFilters();
         }
 
         async function loadRoutes() {
             try {
                 const response = await fetch('/api/routes');
                 const routes = await response.json();
+                currentRoutes = routes;
                 
                 displayRoutes(routes);
                 addMarkersToMap(routes);
@@ -389,12 +430,12 @@
             const routesList = document.getElementById('routesList');
             
             if (routes.length === 0) {
-                routesList.innerHTML = '<p>No transportation routes available.</p>';
+                routesList.innerHTML = '<p>No transportation routes available for the selected location.</p>';
                 return;
             }
             
             routesList.innerHTML = routes.map(route => `
-                <div class="route-card ${route.popular ? 'popular' : ''}" data-type="${route.type}" data-id="${route.id}">
+                <div class="route-card ${route.popular ? 'popular' : ''}" data-type="${route.type}" data-id="${route.id}" data-location="${route.location || 'all'}">
                     <div class="route-header">
                         <h3>${route.name} 
                             <span class="route-type ${route.type}">${route.type.toUpperCase()}</span>
@@ -514,13 +555,44 @@
         }
 
         function setupFilters() {
-            const checkboxes = document.querySelectorAll('.filters input');
+            const checkboxes = document.querySelectorAll('.transport-filters input');
             
             checkboxes.forEach(checkbox => {
                 checkbox.addEventListener('change', function() {
                     filterRoutes();
                 });
             });
+        }
+
+        function setupLocationFilters() {
+            const locationButtons = document.querySelectorAll('.location-filter');
+            
+            locationButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    locationButtons.forEach(btn => btn.classList.remove('active'));
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    const location = this.getAttribute('data-location');
+                    filterRoutesByLocation(location);
+                });
+            });
+        }
+
+        function filterRoutesByLocation(location) {
+            let filteredRoutes = currentRoutes;
+            
+            if (location !== 'all') {
+                filteredRoutes = currentRoutes.filter(route => 
+                    route.location === location || 
+                    route.to.toLowerCase().includes(location) ||
+                    route.name.toLowerCase().includes(location)
+                );
+            }
+            
+            displayRoutes(filteredRoutes);
+            addMarkersToMap(filteredRoutes);
         }
 
         function filterRoutes() {
@@ -543,6 +615,25 @@
                     card.style.display = 'block';
                 } else {
                     card.style.display = 'none';
+                }
+            });
+            
+            markers.forEach((marker, index) => {
+                const routeType = currentRoutes[index].type;
+                const isPopular = currentRoutes[index].popular;
+                
+                const typeVisible = (routeType === 'taxi' && showTaxis) || 
+                                   (routeType === 'bus' && showBuses) || 
+                                   (routeType === 'train' && showTrains);
+                
+                const popularVisible = !showPopular || isPopular;
+                
+                if (typeVisible && popularVisible) {
+                    map.addLayer(marker);
+                    if (routeLines[index]) map.addLayer(routeLines[index]);
+                } else {
+                    map.removeLayer(marker);
+                    if (routeLines[index]) map.removeLayer(routeLines[index]);
                 }
             });
         }

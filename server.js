@@ -30,18 +30,6 @@ const emailTransporter = nodemailer.createTransport({
     }
 });
 
-// For demo mode (comment out the above and uncomment below):
-/*
-const emailTransporter = {
-    sendMail: async function(mailOptions) {
-        console.log(' DEMO MODE - Email would be sent to:', mailOptions.to);
-        console.log('Subject:', mailOptions.subject);
-        console.log('Language:', mailOptions.language || 'en');
-        return { messageId: 'demo-mode' };
-    }
-};
-*/
-
 // Database file paths
 const USERS_FILE = path.join(__dirname, 'data', 'users.json');
 const ROUTES_FILE = path.join(__dirname, 'data', 'routes.json');
@@ -50,54 +38,24 @@ const ROUTES_FILE = path.join(__dirname, 'data', 'routes.json');
 const translations = {
     en: {
         verification_subject: 'Richfield Transport - Email Verification Code',
-        verification_title: 'Email Verification Required',
         verification_message: 'Your verification code is:',
-        verification_instructions: 'This code will expire in 10 minutes. Enter this code on the verification page to complete your registration.',
         reset_subject: 'Richfield Transport - Password Reset Code',
-        reset_title: 'Password Reset Request',
         reset_message: 'Your password reset code is:',
-        reset_instructions: 'This code will expire in 15 minutes. Enter this code to reset your password.',
-        delete_subject: 'Richfield Transport - Account Deletion Verification',
-        delete_title: 'Account Deletion Request',
-        delete_warning: 'WARNING: This action cannot be undone!',
-        delete_message: 'Your account deletion verification code is:',
-        delete_instructions: 'This code will expire in 10 minutes. Enter this code to permanently delete your account.',
-        footer_note: 'If you didn\'t request this, please ignore this email.',
-        slogan: 'Richfield Student Transport Guide - You will never travel alone.'
+        footer_note: 'If you didn\'t request this, please ignore this email.'
     },
     zu: {
         verification_subject: 'Richfield Transport - Ikhodi Yokuqinisekisa I-imeyili',
-        verification_title: 'Ukuqinisekiswa Kwe-imeyili Kuyadingeka',
         verification_message: 'Ikhodi yakho yokuqinisekisa iyi:',
-        verification_instructions: 'Le khodi izophelelwa isikhathi emizuzwini eyi-10. Faka le khodi ekhasini lokuqinisekisa ukuze uqedze ukubhalisa kwakho.',
         reset_subject: 'Richfield Transport - Ikhodi Yokusetha Kabusha Iphasiwedi',
-        reset_title: 'Isicelo Sokusetha Kabusha Iphasiwedi',
         reset_message: 'Ikhodi yakho yokusetha kabusha iphasiwedi iyi:',
-        reset_instructions: 'Le khodi izophelelwa isikhathi emizuzwini eyi-15. Faka le khodi ukuze usethe kabusha iphasiwedi yakho.',
-        delete_subject: 'Richfield Transport - Ukuqinisekiswa Kokucisha I-akhawunti',
-        delete_title: 'Isicelo Sokucisha I-akhawunti',
-        delete_warning: 'ISEXWAYISO: Lesi senzo asikwazi ukuhlehliswa!',
-        delete_message: 'Ikhodi yakho yokuqinisekisa ukucisha i-akhawunti iyi:',
-        delete_instructions: 'Le khodi izophelelwa isikhathi emizuzwini eyi-10. Faka le khodi ukuze ucishe i-akhawunti yakho unomphela.',
-        footer_note: 'Uma ungazange ucele lokhu, nceble ungayinaki le imeyili.',
-        slogan: 'Umhlahlandlela Wezokuthutha Wabafundi Base-Richfield - Ngeke uhambe wedwa.'
+        footer_note: 'Uma ungazange ucele lokhu, nceble ungayinaki le imeyili.'
     },
     st: {
         verification_subject: 'Richfield Transport - Khoutu ya Tiiisetso ya Email',
-        verification_title: 'Tiiisetso ya Email e a Nyakega',
         verification_message: 'Khoutu ya gago ya tiiisetso ke:',
-        verification_instructions: 'Khoutu e e tla felela ka morago ga metsotso e le 10. Kenya khoutu e letlobapeding la tiiisetso go fedisa ngwadisiso ya gago.',
         reset_subject: 'Richfield Transport - Khoutu ya Go seta Patswote gape',
-        reset_title: 'Kopo ya Go seta Patswote gape',
         reset_message: 'Khoutu ya gago ya go seta patswote gape ke:',
-        reset_instructions: 'Khoutu e e tla felela ka morago ga metsotso e le 15. Kenya khoutu e go seta patswote ya gago gape.',
-        delete_subject: 'Richfield Transport - Tiiisetso ya Go phimola Akhaonte',
-        delete_title: 'Kopo ya Go phimola Akhaonte',
-        delete_warning: 'TLHOKOMELISO: Ketso e ga e ka boe e retolosiwa!',
-        delete_message: 'Khoutu ya gago ya tiiisetso ya go phimola akhaonte ke:',
-        delete_instructions: 'Khoutu e e tla felela ka morago ga metsotso e le 10. Kenya khoutu e go phimola akhaonte ya gago ka botlalo.',
-        footer_note: 'Fa o sa kopang seno, akga o se ineele email e.',
-        slogan: 'Tataiso ya Dithuthi ya Baithuti ba Richfield - Ngeke o ise o le nosi.'
+        footer_note: 'Fa o sa kopang seno, akga o se ineele email e.'
     }
 };
 
@@ -161,34 +119,54 @@ let routes = loadRoutes();
 let verificationCodes = {};
 let passwordResetTokens = {};
 
-// Default routes data
+// Enhanced default routes with location data
 function getDefaultRoutes() {
     return [
         {
             "id": 1, "type": "taxi", "name": "Faraday Taxi Rank", "from": "Richfield Campus", "to": "Johannesburg CBD",
             "fee": 25, "time": 30, "schedule": "5:00 AM - 10:00 PM", "lat": -26.2041, "lng": 28.0473, "popular": true,
-            "description": "Direct taxi service to Johannesburg CBD"
+            "description": "Direct taxi service to Johannesburg CBD", "location": "all"
         },
         {
             "id": 2, "type": "taxi", "name": "Bree Taxi Rank", "from": "Richfield Campus", "to": "Soweto",
             "fee": 35, "time": 45, "schedule": "4:30 AM - 11:00 PM", "lat": -26.2044, "lng": 28.0416, "popular": true,
-            "description": "Taxi service to Soweto area"
+            "description": "Taxi service to Soweto area", "location": "soweto"
         },
         {
-            "id": 3, "type": "bus", "name": "Park Station Bus Hub", "from": "Park Station", "to": "Soweto",
+            "id": 3, "type": "taxi", "name": "Wanderers Taxi Rank", "from": "Richfield Campus", "to": "West Rand (Leratong)",
+            "fee": 40, "time": 55, "schedule": "5:00 AM - 10:00 PM", "lat": -26.1950, "lng": 28.0300, "popular": false,
+            "description": "Taxi service to West Rand area", "location": "west-rand"
+        },
+        {
+            "id": 4, "type": "taxi", "name": "MTN Taxi Rank", "from": "Richfield Campus", "to": "Ekurhuleni",
+            "fee": 45, "time": 60, "schedule": "4:30 AM - 11:00 PM", "lat": -26.2100, "lng": 28.0500, "popular": true,
+            "description": "Taxi service to Ekurhuleni area", "location": "ekurhuleni"
+        },
+        {
+            "id": 5, "type": "taxi", "name": "MTN Taxi Rank", "from": "Richfield Campus", "to": "Germiston",
+            "fee": 30, "time": 40, "schedule": "5:00 AM - 10:00 PM", "lat": -26.2150, "lng": 28.0550, "popular": false,
+            "description": "Taxi service to Germiston", "location": "germiston"
+        },
+        {
+            "id": 6, "type": "taxi", "name": "MTN Taxi Rank", "from": "Richfield Campus", "to": "Vaal",
+            "fee": 60, "time": 75, "schedule": "5:30 AM - 9:00 PM", "lat": -26.2200, "lng": 28.0600, "popular": false,
+            "description": "Taxi service to Vaal area", "location": "vaal"
+        },
+        {
+            "id": 7, "type": "bus", "name": "Park Station Bus Hub", "from": "Park Station", "to": "Soweto",
             "fee": 15, "time": 50, "schedule": "5:00 AM - 9:00 PM", "lat": -26.1975, "lng": 28.0344, "popular": false,
-            "description": "Bus service from Park Station to Soweto"
+            "description": "Bus service from Park Station to Soweto", "location": "soweto"
         },
         {
-            "id": 4, "type": "bus", "name": "Park Station to Pretoria", "from": "Park Station", "to": "Pretoria",
+            "id": 8, "type": "bus", "name": "Park Station to Pretoria", "from": "Park Station", "to": "Pretoria",
             "fee": 40, "time": 90, "schedule": "5:30 AM - 8:00 PM", "lat": -26.1975, "lng": 28.0344, "popular": true,
-            "description": "Express bus service to Pretoria"
+            "description": "Express bus service to Pretoria", "location": "all"
         },
         {
-            "id": 5, "type": "train", "name": "PRASA: Johannesburg to Pretoria", "from": "Park Station", "to": "Pretoria Station",
+            "id": 9, "type": "train", "name": "PRASA: Johannesburg to Pretoria", "from": "Park Station", "to": "Pretoria Station",
             "fee": 25, "time": 60, "schedule": "5:00 AM - 8:00 PM", "lat": -26.1975, "lng": 28.0344, "popular": true,
             "description": "Commuter train via Marlboro, Midrand, Centurion",
-            "safety_note": "Travel during daylight hours. Be aware of surroundings."
+            "safety_note": "Travel during daylight hours. Be aware of surroundings.", "location": "all"
         }
     ];
 }
@@ -198,7 +176,41 @@ function generateVerificationCode() {
     return Math.floor(100000 + Math.random() * 900000).toString();
 }
 
-// Send verification email with language support
+// Minimal email template with Richfield colors
+function createMinimalEmailTemplate(title, message, code, language = 'en') {
+    const lang = translations[language] || translations.en;
+    
+    return `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border: 2px solid #0033A0; border-radius: 10px; overflow: hidden;">
+            <!-- Header -->
+            <div style="background: linear-gradient(135deg, #0033A0, #002244); padding: 20px; text-align: center; color: white;">
+                <h2 style="margin: 0; font-size: 24px;">Richfield Student Transport Guide</h2>
+            </div>
+            
+            <!-- Content -->
+            <div style="padding: 30px;">
+                <h3 style="color: #0033A0; text-align: center; margin-bottom: 20px;">${title}</h3>
+                <p style="color: #333; text-align: center; font-size: 16px; margin-bottom: 10px;">${message}</p>
+                
+                <!-- Code Display -->
+                <div style="background: #0033A0; color: white; padding: 20px; border-radius: 8px; font-size: 36px; font-weight: bold; text-align: center; letter-spacing: 8px; margin: 25px 0;">
+                    ${code}
+                </div>
+                
+                <p style="color: #666; text-align: center; font-size: 14px; margin: 20px 0;">
+                    ${lang.footer_note}
+                </p>
+            </div>
+            
+            <!-- Footer -->
+            <div style="background: #DA291C; color: white; padding: 15px; text-align: center; font-size: 12px;">
+                Richfield Student Transport Guide - You will never travel alone.
+            </div>
+        </div>
+    `;
+}
+
+// Send verification email with minimal design
 async function sendVerificationEmail(email, code, language = 'en') {
     try {
         const lang = translations[language] || translations.en;
@@ -207,32 +219,12 @@ async function sendVerificationEmail(email, code, language = 'en') {
             from: 'richfield.transport@example.com',
             to: email,
             subject: lang.verification_subject,
-            html: `
-                <div style="font-family: Arial, sans-serif; background: linear-gradient(135deg, #0033A0, #DA291C); padding: 20px; color: white;">
-                    <h2 style="text-align: center;"> Richfield Student Transport Guide</h2>
-                    <div style="background: white; color: #333; padding: 25px; border-radius: 10px; margin-top: 15px;">
-                        <h3 style="color: #0033A0; text-align: center;">${lang.verification_title}</h3>
-                        <p style="font-size: 16px; text-align: center;">${lang.verification_message}</p>
-                        <div style="background: #0033A0; color: white; padding: 15px; border-radius: 8px; font-size: 32px; font-weight: bold; text-align: center; letter-spacing: 8px; margin: 20px 0;">
-                            ${code}
-                        </div>
-                        <p style="font-size: 14px; text-align: center; color: #666;">
-                            ${lang.verification_instructions}
-                        </p>
-                        <hr style="margin: 20px 0;">
-                        <div style="background: #f8f9fa; padding: 15px; border-radius: 5px; margin: 15px 0;">
-                            <h4 style="color: #0033A0; margin-bottom: 10px;">🚨 Emergency Contacts</h4>
-                            <p style="margin: 5px 0; font-size: 14px;"><strong>Transport Emergency Hotline:</strong> 0800 123 456</p>
-                            <p style="margin: 5px 0; font-size: 14px;"><strong>Richfield Newtown Campus:</strong> (011) 123 4567</p>
-                            <p style="margin: 5px 0; font-size: 14px;"><strong>Campus Security:</strong> (011) 765 4321</p>
-                        </div>
-                        <p style="font-size: 12px; color: #999; text-align: center;">
-                            ${lang.footer_note}<br>
-                            ${lang.slogan}
-                        </p>
-                    </div>
-                </div>
-            `
+            html: createMinimalEmailTemplate(
+                'Email Verification Required',
+                lang.verification_message,
+                code,
+                language
+            )
         };
         
         console.log(` SENDING VERIFICATION EMAIL TO: ${email}`);
@@ -248,7 +240,7 @@ async function sendVerificationEmail(email, code, language = 'en') {
     }
 }
 
-// Send password reset email with language support
+// Send password reset email with minimal design
 async function sendPasswordResetEmail(email, code, language = 'en') {
     try {
         const lang = translations[language] || translations.en;
@@ -257,32 +249,12 @@ async function sendPasswordResetEmail(email, code, language = 'en') {
             from: 'richfield.transport@example.com',
             to: email,
             subject: lang.reset_subject,
-            html: `
-                <div style="font-family: Arial, sans-serif; background: linear-gradient(135deg, #0033A0, #DA291C); padding: 20px; color: white;">
-                    <h2 style="text-align: center;"> Richfield Student Transport Guide</h2>
-                    <div style="background: white; color: #333; padding: 25px; border-radius: 10px; margin-top: 15px;">
-                        <h3 style="color: #0033A0; text-align: center;">${lang.reset_title}</h3>
-                        <p style="font-size: 16px; text-align: center;">${lang.reset_message}</p>
-                        <div style="background: #DA291C; color: white; padding: 15px; border-radius: 8px; font-size: 32px; font-weight: bold; text-align: center; letter-spacing: 8px; margin: 20px 0;">
-                            ${code}
-                        </div>
-                        <p style="font-size: 14px; text-align: center; color: #666;">
-                            ${lang.reset_instructions}
-                        </p>
-                        <hr style="margin: 20px 0;">
-                        <div style="background: #f8f9fa; padding: 15px; border-radius: 5px; margin: 15px 0;">
-                            <h4 style="color: #0033A0; margin-bottom: 10px;">🚨 Emergency Contacts</h4>
-                            <p style="margin: 5px 0; font-size: 14px;"><strong>Transport Emergency Hotline:</strong> 0800 123 456</p>
-                            <p style="margin: 5px 0; font-size: 14px;"><strong>Richfield Newtown Campus:</strong> (011) 123 4567</p>
-                            <p style="margin: 5px 0; font-size: 14px;"><strong>Campus Security:</strong> (011) 765 4321</p>
-                        </div>
-                        <p style="font-size: 12px; color: #999; text-align: center;">
-                            ${lang.footer_note}<br>
-                            ${lang.slogan}
-                        </p>
-                    </div>
-                </div>
-            `
+            html: createMinimalEmailTemplate(
+                'Password Reset Request',
+                lang.reset_message,
+                code,
+                language
+            )
         };
         
         console.log(` SENDING PASSWORD RESET EMAIL TO: ${email}`);
@@ -294,59 +266,6 @@ async function sendPasswordResetEmail(email, code, language = 'en') {
         
     } catch (error) {
         console.error(' ERROR SENDING PASSWORD RESET EMAIL:', error);
-        return false;
-    }
-}
-
-// Send delete verification email with language support
-async function sendDeleteVerificationEmail(email, code, language = 'en') {
-    try {
-        const lang = translations[language] || translations.en;
-        
-        const mailOptions = {
-            from: 'richfield.transport@example.com',
-            to: email,
-            subject: lang.delete_subject,
-            html: `
-                <div style="font-family: Arial, sans-serif; background: linear-gradient(135deg, #0033A0, #DA291C); padding: 20px; color: white;">
-                    <h2 style="text-align: center;"> Richfield Student Transport Guide</h2>
-                    <div style="background: white; color: #333; padding: 25px; border-radius: 10px; margin-top: 15px;">
-                        <h3 style="color: #DA291C; text-align: center;">${lang.delete_title}</h3>
-                        <p style="font-size: 16px; text-align: center; color: #DA291C; font-weight: bold;">
-                            ${lang.delete_warning}
-                        </p>
-                        <p style="font-size: 16px; text-align: center;">${lang.delete_message}</p>
-                        <div style="background: #DA291C; color: white; padding: 15px; border-radius: 8px; font-size: 32px; font-weight: bold; text-align: center; letter-spacing: 8px; margin: 20px 0;">
-                            ${code}
-                        </div>
-                        <p style="font-size: 14px; text-align: center; color: #666;">
-                            ${lang.delete_instructions}
-                        </p>
-                        <hr style="margin: 20px 0;">
-                        <div style="background: #f8f9fa; padding: 15px; border-radius: 5px; margin: 15px 0;">
-                            <h4 style="color: #0033A0; margin-bottom: 10px;">🚨 Emergency Contacts</h4>
-                            <p style="margin: 5px 0; font-size: 14px;"><strong>Transport Emergency Hotline:</strong> 0800 123 456</p>
-                            <p style="margin: 5px 0; font-size: 14px;"><strong>Richfield Newtown Campus:</strong> (011) 123 4567</p>
-                            <p style="margin: 5px 0; font-size: 14px;"><strong>Campus Security:</strong> (011) 765 4321</p>
-                        </div>
-                        <p style="font-size: 12px; color: #999; text-align: center;">
-                            ${lang.footer_note}<br>
-                            ${lang.slogan}
-                        </p>
-                    </div>
-                </div>
-            `
-        };
-        
-        console.log(` SENDING DELETE VERIFICATION EMAIL TO: ${email}`);
-        console.log(` LANGUAGE: ${language}`);
-        
-        const result = await emailTransporter.sendMail(mailOptions);
-        console.log(` Delete verification email sent successfully to ${email}`);
-        return true;
-        
-    } catch (error) {
-        console.error(' ERROR SENDING DELETE VERIFICATION EMAIL:', error);
         return false;
     }
 }
@@ -477,7 +396,7 @@ app.post('/login', (req, res) => {
     res.json({ success: true, message: 'Login successful!' });
 });
 
-// Password reset request
+// Password reset request - FIXED VERSION
 app.post('/api/forgot-password', async (req, res) => {
     const { email } = req.body;
     
@@ -520,7 +439,7 @@ app.post('/api/forgot-password', async (req, res) => {
     }
 });
 
-// Verify reset code and update password
+// Verify reset code and update password - FIXED VERSION
 app.post('/api/reset-password', (req, res) => {
     const { email, code, newPassword } = req.body;
     
@@ -555,83 +474,6 @@ app.post('/api/reset-password', (req, res) => {
         }
     } else {
         res.json({ success: false, message: 'User not found' });
-    }
-});
-
-// Delete account with email verification
-app.post('/api/verify-delete', async (req, res) => {
-    const { email, code } = req.body;
-    
-    if (!req.session.user) {
-        return res.status(401).json({ success: false, message: 'Not authenticated' });
-    }
-    
-    if (!email || !code) {
-        return res.json({ success: false, message: 'Email and verification code required' });
-    }
-    
-    // Verify it's the user's email
-    if (req.session.user.email !== email) {
-        return res.json({ success: false, message: 'Email does not match your account' });
-    }
-    
-    const tokenData = passwordResetTokens[email];
-    if (!tokenData || tokenData.code !== code) {
-        return res.json({ success: false, message: 'Invalid verification code' });
-    }
-    
-    const userId = req.session.user.id;
-    const userIndex = users.findIndex(u => u.id === userId);
-    
-    if (userIndex !== -1) {
-        const deletedUser = users[userIndex];
-        users.splice(userIndex, 1);
-        delete passwordResetTokens[email];
-        
-        if (saveUsers(users)) {
-            console.log(` ACCOUNT DELETED: ${deletedUser.username} (${deletedUser.email})`);
-            req.session.destroy();
-            res.json({ success: true, message: 'Account deleted successfully' });
-        } else {
-            res.json({ success: false, message: 'Error deleting account' });
-        }
-    } else {
-        res.json({ success: false, message: 'User not found' });
-    }
-});
-
-// Send delete verification code
-app.post('/api/send-delete-verification', async (req, res) => {
-    if (!req.session.user) {
-        return res.status(401).json({ success: false, message: 'Not authenticated' });
-    }
-    
-    const userEmail = req.session.user.email;
-    const userLanguage = req.session.user.language || 'en';
-    const deleteCode = generateVerificationCode();
-    
-    passwordResetTokens[userEmail] = {
-        code: deleteCode,
-        expires: Date.now() + 10 * 60 * 1000,
-        language: userLanguage
-    };
-    
-    console.log(`\n ACCOUNT DELETE VERIFICATION FOR: ${userEmail}`);
-    console.log(` USER LANGUAGE: ${userLanguage}`);
-    
-    // Send delete verification email in user's preferred language
-    const emailSent = await sendDeleteVerificationEmail(userEmail, deleteCode, userLanguage);
-    
-    if (emailSent) {
-        res.json({ 
-            success: true, 
-            message: 'Verification code sent to your email! Check your inbox and spam folder.'
-        });
-    } else {
-        res.json({ 
-            success: false, 
-            message: 'Failed to send verification email. Please try again.'
-        });
     }
 });
 
@@ -746,14 +588,9 @@ if (!fs.existsSync(dataDir)) {
 app.listen(PORT, () => {
     console.log(`\n Richfield Enhanced Transport Guide v3.0`);
     console.log(` Running on http://localhost:${PORT}`);
-    console.log(` Email System: ${emailTransporter.createTransport ? 'ACTIVE' : 'DEMO MODE'}`);
+    console.log(` Email System: ACTIVE`);
     console.log(` Database: Persistent JSON storage`);
-    console.log(`  Routes: Enhanced transportation system`);
+    console.log(` Routes: Enhanced transportation system with location search`);
     console.log(` Languages: English, Zulu, Sotho`);
-    console.log(` Emergency Features: Integrated hotline support`);
-    console.log(`\n Emergency Contacts:`);
-    console.log(`   Transport Hotline: 0800 123 456`);
-    console.log(`   Richfield Campus: (011) 123 4567`);
-    console.log(`   Campus Security: (011) 765 4321`);
-    console.log(`\nPress Ctrl+C to stop the server\n`);
+    console.log(`\n Press Ctrl+C to stop the server\n`);
 });
